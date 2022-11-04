@@ -6,47 +6,29 @@ import LogoutButton from './components/LogoutButton.vue';
 import UserInfo from './components/UserInfo.vue';
 import { useAuth0 } from "@auth0/auth0-vue";
 import Fetcher from './components/Fetcher.vue';
-const { isAuthenticated, isLoading } = useAuth0();
+const auth0Client = useAuth0();
+function vnbItemClicked(text: string) {
+    if (text === 'Login') {
+      auth0Client.loginWithRedirect();
+    }
+  }
+
 </script>
 
 <template>
   <header>
-    <img
-      alt="Vue logo"
-      class="logo"
-      src="@/assets/logo.svg"
-      width="125"
-      height="125"
-    />
-
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-        <RouterLink to="/chart">Chart</RouterLink>
-        <RouterLink to="/upload">Upload</RouterLink>
-      </nav>
-      <template v-if="!isAuthenticated">
-        <LoginButton />
-      </template>
-      <template v-if="isAuthenticated">
-        <LogoutButton />
-      <UserInfo />
-      
-      </template>
-      <Fetcher />
-    </div>
+    
   </header>
-  
-  <RouterView />
+  <div class="wrapper">
+    <RouterView />
+  </div>  
 </template>
 
 <style scoped>
+@import url("https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css");
 header {
   line-height: 1.5;
-  max-height: 100vh;
+  max-height: 15vh;
 }
 
 .logo {
@@ -82,7 +64,6 @@ nav a:first-of-type {
 @media (min-width: 1024px) {
   header {
     display: flex;
-    place-items: center;
     padding-right: calc(var(--section-gap) / 2);
   }
 
@@ -90,10 +71,12 @@ nav a:first-of-type {
     margin: 0 2rem 0 0;
   }
 
-  header .wrapper {
+  .wrapper {
     display: flex;
+    float: left;
     place-items: flex-start;
     flex-wrap: wrap;
+    width: 100vw;
   }
 
   nav {

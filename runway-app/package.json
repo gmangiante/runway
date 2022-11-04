@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@auth0/auth0-vue": "^1.0.2",
+    "@vue/compat": "^3.2.41",
     "chart.js": "^3.9.1",
     "pinia": "^2.0.23",
     "stylus": "^0.59.0",
