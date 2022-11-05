@@ -2,21 +2,21 @@
   "name": "runway-app",
   "version": "0.0.0",
   "scripts": {
-    "dev": "vite",
     "build": "run-p type-check build-only",
-    "preview": "vite preview",
     "test:unit": "vitest --environment jsdom --root src/",
     "test:e2e": "playwright test",
+    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore",
     "build-only": "vite build",
-    "type-check": "vue-tsc --noEmit -p tsconfig.vitest.json --composite false",
-    "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix --ignore-path .gitignore"
+    "dev": "vite",
+    "preview": "vite preview",
+    "start": "vue-cli-service serve --open",
+    "type-check": "vue-tsc --noEmit -p tsconfig.vitest.json --composite false"
   },
   "dependencies": {
     "@auth0/auth0-vue": "^1.0.2",
-    "@vue/compat": "^3.2.41",
     "chart.js": "^3.9.1",
+    "mdb-vue-ui-kit": "^3.1.0",
     "pinia": "^2.0.23",
-    "stylus": "^0.59.0",
     "vue": "^3.2.41",
     "vue-chartjs": "^4.1.2",
     "vue-router": "^4.1.5"
@@ -36,9 +36,13 @@
     "jsdom": "^20.0.1",
     "npm-run-all": "^4.1.5",
     "prettier": "^2.7.1",
+    "sass": "^1.26.5",
+    "sass-loader": "^8.0.2",
+    "stylus": "^0.59.0",
     "typescript": "~4.7.4",
     "vite": "^3.1.8",
     "vitest": "^0.24.3",
+    "vue-cli-plugin-mdb5": "~1.2.0",
     "vue-tsc": "^1.0.8"
   }
 }

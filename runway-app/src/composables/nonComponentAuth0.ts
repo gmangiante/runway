@@ -6,7 +6,7 @@ import { ref } from "vue";
 
 export const client: Ref<Auth0VueClient | undefined> = ref<Auth0VueClient>();
 
-export function exposeAuth0() {
+export const useNonComponentAuth0 = () => {
   return {
     install(app: {
       config: { globalProperties: { [x: string]: Auth0VueClient } };

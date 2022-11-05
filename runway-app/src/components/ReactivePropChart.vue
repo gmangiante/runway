@@ -1,6 +1,5 @@
-<script lang="ts">
-import { defineComponent } from 'vue'
-import type { PropType } from 'vue'
+<script setup lang="ts">
+import { ref, onMounted } from 'vue'
 import { Bar } from 'vue-chartjs'
 import {
   Chart as ChartJS,
@@ -14,94 +13,78 @@ import {
 
 import type { Plugin, ChartData, DefaultDataPoint } from 'chart.js'
 
+export interface ChartProps {
+  chartId?: string,
+  width?: number,
+  height?: number,
+  cssClasses?: string,
+  styles?: unknown,
+  plugins?: unknown
+}
+
+const props = withDefaults(defineProps<ChartProps>(), {
+  chartId: 'bar-chart',
+  width: 400,
+  height: 400,
+  cssClasses: '',
+  styles: () => {},
+  plugins: () => {}
+})
+
+let chartData = ref({} as ChartData<'bar', DefaultDataPoint<'bar'>, unknown>)
+
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 
-export default defineComponent({
-  name: 'ReactiveChart',
-  components: {
-    Bar
-  },
-  props: {
-    chartId: {
-      type: String,
-      default: 'bar-chart'
-    },
-    width: {
-      type: Number,
-      default: 400
-    },
-    height: {
-      type: Number,
-      default: 400
-    },
-    cssClasses: {
-      default: '',
-      type: String
-    },
-    styles: {
-      type: Object as PropType<Partial<CSSStyleDeclaration>>,
-      default: () => {}
-    },
-    plugins: {
-      type: Array as PropType<Plugin<'bar'>[]>,
-      default: () => []
-    }
-  },
-  data() {
-    return {
-      chartData: {} as ChartData<'bar', DefaultDataPoint<'bar'>, unknown>
-    }
-  },
-  methods: {
-    fillData() {
-      const updatedChartData = {
-        labels: [
-          'January' + this.getRandomInt(),
-          'February',
-          'March',
-          'April',
-          'May',
-          'June',
-          'July',
-          'August',
-          'September',
-          'October',
-          'November',
-          'December'
-        ],
-        datasets: [
-          {
-            label: 'Data One',
-            backgroundColor: '#f87979',
-            data: [
-              this.getRandomInt(),
-              this.getRandomInt(),
-              this.getRandomInt(),
-              this.getRandomInt(),
-              this.getRandomInt(),
-              this.getRandomInt(),
-              this.getRandomInt(),
-              this.getRandomInt(),
-              this.getRandomInt(),
-              this.getRandomInt(),
-              this.getRandomInt(),
-              this.getRandomInt()
-            ]
-          }
+function fillData() {
+  const updatedChartData = {
+    labels: [
+      'January' + getRandomInt(),
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December'
+    ],
+    datasets: [
+      {
+        label: 'Data One',
+        backgroundColor: '#f87979',
+        data: [
+          getRandomInt(),
+          getRandomInt(),
+          getRandomInt(),
+          getRandomInt(),
+          getRandomInt(),
+          getRandomInt(),
+          getRandomInt(),
+          getRandomInt(),
+          getRandomInt(),
+          getRandomInt(),
+          getRandomInt(),
+          getRandomInt()
         ]
       }
-
-      this.chartData = { ...updatedChartData }
-    },
-    getRandomInt() {
-      return Math.floor(Math.random() * (50 - 5 + 1)) + 5
-    }
-  },
-  mounted() {
-    this.fillData();
-    setInterval(() => { this.fillData() }, 2000);
+    ]
   }
+  
+  chartData.value = { ...updatedChartData }
+}
+
+function getRandomInt() {
+  return Math.floor(Math.random() * (50 - 5 + 1)) + 5
+}
+
+onMounted(() => {
+  fillData();
+  setInterval(() => { fillData() }, 2000);
 })
+
 </script>
 
 <template>
@@ -115,7 +98,7 @@ export default defineComponent({
     :width="width"
     :height="height"
     :css-classes="cssClasses"
-    :styles="styles"
-    :plugins="plugins"
-    />
+    :styles="styles as unknown as Partial<CSSStyleDeclaration>"
+    :plugins="plugins as unknown as Plugin<'bar', unknown>[]"
+  />
 </template>

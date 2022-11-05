@@ -29,6 +29,12 @@ const router = createRouter({
       name: "upload",
       component: () => import("../views/UploadView.vue"),
       beforeEnter: authGuard
+    },
+    {
+      path: "/datasets",
+      name: "datasets",
+      component: () => import("../views/DatasetsView.vue"),
+      beforeEnter: authGuard
     }
   ],
 });

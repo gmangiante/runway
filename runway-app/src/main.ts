@@ -1,12 +1,12 @@
 import { createApp } from "vue";
 import { createPinia } from "pinia";
 import { createAuth0 } from '@auth0/auth0-vue';
-import { exposeAuth0 } from "./hooks/exposeAuth";
+import { useNonComponentAuth0 } from "./composables/nonComponentAuth0";
 
 import App from "./App.vue";
 import router from "./router";
 
-import "./assets/main.css";
+import 'mdb-vue-ui-kit/css/mdb.min.css';
 
 const app = createApp(App);
 
@@ -22,6 +22,6 @@ app.use(
     })
   );
 
-app.use(exposeAuth0());
+app.use(useNonComponentAuth0());
 
 app.mount("#app");
