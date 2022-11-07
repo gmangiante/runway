@@ -9,11 +9,11 @@ import { MDBBtn, MDBSpinner, MDBBreadcrumb, MDBBreadcrumbItem } from 'mdb-vue-ui
       <div>
         <nav aria-label="breadcrumb">
           <MDBBreadcrumb>
-            <MDBBreadcrumbItem active>Datasets</MDBBreadcrumbItem>
+            <MDBBreadcrumbItem active>Models</MDBBreadcrumbItem>
           </MDBBreadcrumb>
         </nav>
-        <RouterLink to="/datasets/create" custom v-slot="{ navigate }" v-if="$auth0.isAuthenticated.value">
-          <MDBBtn @click="navigate" role="link" color="primary" class="m-3">Add Dataset</MDBBtn>
+        <RouterLink to="/models/create" custom v-slot="{ navigate }" v-if="$auth0.isAuthenticated.value">
+          <MDBBtn @click="navigate" role="link" color="primary" class="m-3">Add Model</MDBBtn>
         </RouterLink>
         <DatasetsTable />
       </div>

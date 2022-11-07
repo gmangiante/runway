@@ -10,7 +10,7 @@ from urllib.request import urlopen
 from json import loads
 
 app = Flask(__name__)
-app.config["SESSION_PERMANENT"] = False
+app.config["SESSION_PERMANENT"] = True
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
@@ -60,9 +60,15 @@ if __name__ == "__main__":
 
 @app.before_request
 def before_req_func():
-    if session.get("user") is None:
-        token = request.headers.get("Authorization", None)
-        if token is not None:
-            token = token.split()[1]
-            userinfo = urlopen("https://" + env["AUTH0_DOMAIN"] + "/userinfo?access_token=" + token).read()
-            session["user"] = loads(userinfo)["email"]
+    if request.method == 'OPTIONS':
+        return
+
+    token = request.headers.get("Authorization", None)
+    user = session.get("user", None)
+
+    if user is None and token is not None:
+        token = token.split()[1]
+        userinfo = urlopen(f"https://{env['AUTH0_DOMAIN']}/userinfo?access_token={token}").read()
+        session["user"] = loads(userinfo)["email"]
+    elif user is not None and token is None:
+        session.pop("user", None)

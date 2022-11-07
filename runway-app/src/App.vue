@@ -7,7 +7,7 @@ import { RouterView } from "vue-router";
   <header>
     <NavBar />
   </header>
-  <main>
+  <main class="m-3">
     <RouterView /> 
   </main>
 </template>

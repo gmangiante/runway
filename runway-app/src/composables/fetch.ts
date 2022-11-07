@@ -34,6 +34,7 @@ export const useFetch = async <T>(
                 const headers = optionsValue.headers ? new Headers(optionsValue.headers) : new Headers()
                 headers.set("Authorization", `Bearer ${token}`)
                 optionsValue.headers = headers
+                optionsValue.credentials = "include"
             }
             
             const response = await fetch(urlValue, optionsValue)

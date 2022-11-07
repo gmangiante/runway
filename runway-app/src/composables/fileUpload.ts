@@ -22,10 +22,9 @@ export const useFileUpload = (url: string)  => {
         if (index > -1) files.value.splice(index, 1)
     }
 
-	function uploadFiles()
+	function uploadFiles(formData: FormData)
 	{
 		return Promise.all(files.value.map(async (file: UploadableFile) => {
-			let formData = new FormData()
 			formData.append('file', file.file)
 
 			file.status = 'loading'
