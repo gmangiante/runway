@@ -8,7 +8,7 @@ export default defineConfig({
   css: {
     devSourcemap: true,
   },
-  plugins: [vue()],
+  plugins: [vue({ reactivityTransform: true })],
   resolve: {
     alias: {
       "@": fileURLToPath(new URL("./src", import.meta.url))

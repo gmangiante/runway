@@ -13,3 +13,4 @@ logs
 *.sw?
 
 datasets/
+__pycache__/

@@ -6,25 +6,23 @@ import { MDBNavbar, MDBNavbarBrand, MDBNavbarToggler, MDBCollapse, MDBNavbarNav,
 const navbarCollapsed = ref(false);
 const { loginWithRedirect, user, isAuthenticated, logout } = useAuth0();
 
+function doLogin() {
+  loginWithRedirect()
+}
+
 </script>
 
 <template>
 <MDBNavbar expand="lg" dark bg="dark" container>
-    <MDBNavbarBrand href="#">runway</MDBNavbarBrand>
+    <MDBNavbarBrand href="#">runway</MDBNavbarBrand>a
     <MDBNavbarToggler
       @click="navbarCollapsed = !navbarCollapsed"
       target="#navbarSupportedContent"
     ></MDBNavbarToggler>
     <MDBCollapse v-model="navbarCollapsed" id="navbarSupportedContent">
       <MDBNavbarNav class="mb-2 mb-lg-0">
-        <MDBNavbarItem to="/" class="mt-1">
-          Home
-        </MDBNavbarItem>
-        <template v-if="isAuthenticated">
-            <MDBNavbarItem to="/datasets" class="mt-1">Datasets</MDBNavbarItem>
-            <MDBNavbarItem to="/chart" class="mt-1">Chart</MDBNavbarItem>
-            <MDBNavbarItem to="/upload" class="mt-1">Upload</MDBNavbarItem>
-        </template>
+        <MDBNavbarItem to="/" class="mt-1">Home</MDBNavbarItem>
+        <MDBNavbarItem to="/datasets" class="mt-1">Datasets</MDBNavbarItem>
       </MDBNavbarNav>
       <MDBNavbarNav id="navbar-right" class="mt-1">
         <template v-if="isAuthenticated">
@@ -32,7 +30,7 @@ const { loginWithRedirect, user, isAuthenticated, logout } = useAuth0();
           <MDBBtn color="primary" @click="logout()">Log Out</MDBBtn>
         </template>
         <template v-else>
-            <MDBBtn color="primary" @click="loginWithRedirect()">Log In</MDBBtn>
+            <MDBBtn color="primary" @click="doLogin()">Log In</MDBBtn>
         </template>
       </MDBNavbarNav>
     </MDBCollapse>

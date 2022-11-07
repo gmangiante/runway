@@ -1,12 +1,11 @@
 // https://javascript.plainenglish.io/create-a-basic-usefetch-hook-in-vue-b3ff113872d7
 // https://vuejs.org/guide/reusability/composables.html#async-state-example
 
-import { isRef, reactive, toRefs, unref, watchEffect, computed } from 'vue';
+import { isRef, reactive, toRefs, unref, watchEffect } from 'vue';
 import { client } from './nonComponentAuth0';
 
 export const useFetch = async <T>(
     url: string,
-    useAuth: boolean = true,
     options: RequestInit = {} as RequestInit ) => {
 
     const state = reactive<FetchState<T>>({
@@ -24,14 +23,13 @@ export const useFetch = async <T>(
         state.data = null
 
         const urlValue = unref(url)
-        const useAuthValue = unref(useAuth)
         const optionsValue = unref(options)
 
         try {
-            if (useAuthValue)
-            {
-                const cli = unref(client);
-                if (!cli) throw new Error('Unable to acquire Auth0 client')
+            const cli = unref(client);
+            if (!cli) throw new Error('Unable to acquire Auth0 client')
+
+            if (cli.isAuthenticated) {
                 const token = await cli.getAccessTokenSilently()
                 const headers = optionsValue.headers ? new Headers(optionsValue.headers) : new Headers()
                 headers.set("Authorization", `Bearer ${token}`)
@@ -55,7 +53,7 @@ export const useFetch = async <T>(
         }
     }
 
-    if (isRef(url) || isRef(useAuth) || isRef(options))
+    if (isRef(url) || isRef(options))
     {
         watchEffect(doFetch)
     }

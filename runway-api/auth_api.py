@@ -1,7 +1,6 @@
 """Python Flask API Auth0 integration example
 """
 
-
 from dotenv import load_dotenv, find_dotenv
 from os import environ as env
 from flask import request, jsonify, _request_ctx_stack, Response, Blueprint

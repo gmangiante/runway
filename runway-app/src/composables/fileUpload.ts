@@ -30,7 +30,7 @@ export const useFileUpload = (url: string)  => {
 
 			file.status = 'loading'
 
-			const fetchState = await useFetch(url, true, { method: 'POST', body: formData})
+			const fetchState = await useFetch(url, { method: 'POST', body: formData})
 
             file.status = fetchState.hasError.value ? 'failed' : 'complete'
 		}))
