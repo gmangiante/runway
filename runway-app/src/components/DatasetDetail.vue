@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { Dataset } from '@/models/Dataset'
 import { reactive } from 'vue'
-import { MDBCard, MDBCardBody, MDBCardHeader, MDBBtn, MDBTable } from 'mdb-vue-ui-kit';
+import { MDBCard, MDBCardBody, MDBCardFooter, MDBBtn, MDBTable } from 'mdb-vue-ui-kit';
 import { useAuth0 } from '@auth0/auth0-vue';
 import { $ } from 'vue/macros'
 import { useFetch } from '@/composables/fetch'
@@ -42,6 +42,9 @@ const { isLoading, hasError, errorMessage, data } =
                     </tr>
                 </MDBTable>
             </MDBCardBody>
+            <MDBCardFooter>
+                <RouterLink to="/datasets"><MDBBtn color="primary">Go back</MDBBtn></RouterLink>
+            </MDBCardFooter>
         </MDBCard>
     </main>
 </template>

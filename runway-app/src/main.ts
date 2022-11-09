@@ -18,7 +18,9 @@ app.use(
       domain: "dev-c3pt87w5gyl1mcox.us.auth0.com",
       client_id: "yoKIWRYGdrKqNu7BxswWqSuC9JpIUydE",
       redirect_uri: window.location.origin,
-      audience: "https://runway/api"
+      audience: "https://runway/api",
+      useRefreshTokens: true,
+      cacheLocation: 'localstorage'
     })
   );
 

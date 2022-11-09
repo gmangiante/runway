@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Dataset } from '@/models/Dataset'
 import { reactive } from 'vue'
-import { MDBInput, MDBCard, MDBCardBody, MDBCheckbox, MDBBtn, MDBRow, MDBCol } from 'mdb-vue-ui-kit';
+import { MDBInput, MDBCard, MDBCardBody, MDBCheckbox, MDBBtn, MDBRow, MDBCol, MDBCardFooter } from 'mdb-vue-ui-kit';
 import { useAuth0 } from '@auth0/auth0-vue';
 import { $ } from 'vue/macros'
 import { useFetch } from '@/composables/fetch'
@@ -32,6 +32,7 @@ async function submitForm(e: Event) {
                 </MDBCol>
                 <MDBCol col="12">
                     <MDBBtn color="primary" type="submit">Create dataset</MDBBtn>
+                    <RouterLink to="/datasets"><MDBBtn color="secondary">Cancel</MDBBtn></RouterLink>
                 </MDBCol>
             </MDBRow>
         </MDBCardBody>

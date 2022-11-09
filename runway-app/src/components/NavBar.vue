@@ -18,7 +18,7 @@ function doLogout() {
 </script>
 
 <template>
-<MDBNavbar expand="lg" dark bg="dark" container>
+  <MDBNavbar expand="lg" dark bg="dark" container position="top">
     <MDBNavbarBrand href="/">runway</MDBNavbarBrand>
     <MDBNavbarToggler
       @click="navbarCollapsed = !navbarCollapsed"
@@ -33,7 +33,17 @@ function doLogout() {
       <MDBNavbarNav id="navbar-right" class="mt-1">
         <small class="navbar-text mt-1 me-5 text-muted">&copy; 2022 Gabriel Mangiante</small>
         <template v-if="isAuthenticated">
+          <div>
+          <img
+            src="https://avatars.githubusercontent.com/u/3937358?s=120&v=4"
+            class="rounded-circle m-2"
+            height="30"
+            width="30"
+            alt=""
+            loading="lazy"
+          />
           <span class="navbar-text mt-1" id="user-name">{{ user.name }}</span>
+        </div>
           <MDBBtn color="primary" @click="doLogout()">Log Out</MDBBtn>
         </template>
         <template v-else>
