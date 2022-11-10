@@ -1,21 +1,34 @@
 <script setup lang="ts">
 import { Dataset } from '@/models/Dataset'
-import { reactive } from 'vue'
-import { MDBInput, MDBCard, MDBCardBody, MDBCheckbox, MDBBtn, MDBRow, MDBCol, MDBCardFooter } from 'mdb-vue-ui-kit';
+import { reactive, ref } from 'vue'
+import { MDBInput, MDBCard, MDBCardBody, MDBBtn, MDBRow, MDBCol, MDBSwitch, MDBCardTitle, MDBFile, MDBListGroup, MDBListGroupItem } from 'mdb-vue-ui-kit';
 import { useAuth0 } from '@auth0/auth0-vue';
 import { $ } from 'vue/macros'
 import { useFetch } from '@/composables/fetch'
 import router from '@/router';
+import DropZone from '../components/DropZone.vue'
+import FilePreview from '../components/FilePreview.vue'
+import { useFileUpload } from '@/composables/fileUpload';
 
 const { user } = $(useAuth0())
-const newDataset = reactive(new Dataset(-1, '', false, user.email || 'error', new Date(), new Date()))
+const newDataset = reactive(new Dataset(-1, '', false, user.email || 'error', new Date(), new Date(), []))
+
+const { files, addFiles, removeFile, uploadFiles } = useFileUpload()
+
+function onInputChange(e: any) {
+	addFiles(e.target.files)
+}
 
 async function submitForm(e: Event) {
     e.preventDefault()
-    const { isLoading, hasError, errorMessage, data } =
+    let { isLoading, hasError, errorMessage, data } =
         await useFetch<{ new_dataset_id: number }>('http://localhost:5000/api/datasets/', { method: 'POST', body: JSON.stringify(newDataset) })
-    if (!hasError.value && data.value)
-        await router.push({ name: 'datasetDetail', params: { id: data.value['new_dataset_id'] } })
+    if (!hasError.value && data.value) {
+        const id = data.value['new_dataset_id']
+        const upload_url = `http://localhost:5000/api/datasets/datafiles/${user.email}/${id}`
+        await uploadFiles(upload_url)
+        await router.push({ name: 'datasetDetail', params: { id: id }, replace: true, force: true })
+    }
 }
 
 </script>
@@ -28,7 +41,23 @@ async function submitForm(e: Event) {
                     <MDBInput label="Dataset name" v-model="newDataset.name" class="mb-3" required />
                 </MDBCol>
                 <MDBCol col="12">
-                    <MDBCheckbox label="Public" v-model="newDataset.is_public" />
+                    <MDBSwitch :label="newDataset.is_public ? 'Public' : 'Private'" v-model="newDataset.is_public" />
+                </MDBCol>
+                <MDBCol col="12">
+                    <DropZone @files-dropped="addFiles" #default="{ dropZoneActive }">
+                        <MDBCardTitle v-if="dropZoneActive">
+                            Drop here
+                        </MDBCardTitle>
+                        <MDBCardTitle v-else>
+                            Drag files here or
+                        </MDBCardTitle>
+                        <MDBFile multiple @change="onInputChange" />
+                        <MDBListGroup flush v-show="files.length">
+                            <MDBListGroupItem v-for="file of files" :key="file.id" >
+                                <FilePreview :file="file" @remove="removeFile" />
+                            </MDBListGroupItem>
+                        </MDBListGroup>
+                    </DropZone>
                 </MDBCol>
                 <MDBCol col="12">
                     <MDBBtn color="primary" type="submit">Create dataset</MDBBtn>
@@ -38,3 +67,7 @@ async function submitForm(e: Event) {
         </MDBCardBody>
     </MDBCard>
 </template>
+
+<style>
+    .drop-zone { background-color: red;}
+</style>

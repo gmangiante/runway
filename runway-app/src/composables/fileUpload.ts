@@ -2,7 +2,7 @@ import { ref, unref } from 'vue'
 import { UploadableFile } from '@/models/UploadableFile'
 import { useFetch } from './fetch'
 
-export const useFileUpload = (url: string)  => {
+export const useFileUpload = ()  => {
 	const files = ref<UploadableFile[]>([])
 
     function addFiles(newFiles: File[]) {
@@ -22,9 +22,11 @@ export const useFileUpload = (url: string)  => {
         if (index > -1) files.value.splice(index, 1)
     }
 
-	function uploadFiles(formData: FormData)
+	function uploadFiles(url: string)
 	{
 		return Promise.all(files.value.map(async (file: UploadableFile) => {
+            const formData = new FormData()
+
 			formData.append('file', file.file)
 
 			file.status = 'loading'

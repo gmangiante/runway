@@ -14,6 +14,8 @@ import {
 import type { Plugin, ChartData, DefaultDataPoint } from 'chart.js'
 
 export interface ChartProps {
+  labels: string[],
+  datasets: { label: string, backgroundColor: string, data: number[] }[]
   chartId?: string,
   width?: number,
   height?: number,
@@ -23,6 +25,8 @@ export interface ChartProps {
 }
 
 const props = withDefaults(defineProps<ChartProps>(), {
+  labels: () => [],
+  datasets: () => [],
   chartId: 'bar-chart',
   width: 400,
   height: 400,
@@ -31,11 +35,9 @@ const props = withDefaults(defineProps<ChartProps>(), {
   plugins: () => {}
 })
 
-let chartData = ref({} as ChartData<'bar', DefaultDataPoint<'bar'>, unknown>)
-
 ChartJS.register(Title, Tooltip, Legend, BarElement, CategoryScale, LinearScale)
 
-function fillData() {
+/*function fillData() {
   const updatedChartData = {
     labels: [
       'January' + getRandomInt(),
@@ -83,13 +85,13 @@ function getRandomInt() {
 onMounted(() => {
   fillData();
   setInterval(() => { fillData() }, 2000);
-})
+})*/
 
 </script>
 
 <template>
   <Bar
-    :chart-data="chartData"
+    :chart-data="{ labels: props.labels, datasets: props.datasets } as ChartData<'bar', DefaultDataPoint<'bar'>, unknown>"
     :chart-options='{
       responsive: true,
       maintainAspectRatio: false

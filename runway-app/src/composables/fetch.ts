@@ -1,8 +1,10 @@
 // https://javascript.plainenglish.io/create-a-basic-usefetch-hook-in-vue-b3ff113872d7
 // https://vuejs.org/guide/reusability/composables.html#async-state-example
 
-import { isRef, reactive, toRefs, unref, watchEffect } from 'vue';
+import { isRef, reactive, toRefs, ref, unref, watchEffect } from 'vue';
+import type { UnwrapRef } from 'vue'
 import { client } from './nonComponentAuth0';
+
 
 export const useFetch = async <T>(
     url: string,
@@ -12,7 +14,8 @@ export const useFetch = async <T>(
         isLoading: true,
         hasError: false,
         errorMessage: '',
-        data: null
+        data: null,
+        blob: null
     })
 
     const doFetch = async() =>
@@ -43,7 +46,10 @@ export const useFetch = async <T>(
                 throw new Error(response.statusText);               
             }
 
-            state.data = await response.json()
+            if (response.headers.get('Content-Type')?.includes('json'))
+                state.data = await response.json()
+            else
+                state.blob = await response.blob()
         }
         catch (error: unknown) {
             state.hasError = true
@@ -52,6 +58,7 @@ export const useFetch = async <T>(
         finally {
             state.isLoading = false
         }
+        //console.log(state)
     }
 
     if (isRef(url) || isRef(options))
@@ -71,4 +78,5 @@ export interface FetchState<T> {
     hasError: boolean
     errorMessage: string
     data: T | null
+    blob: Blob | null
 }

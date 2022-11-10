@@ -1,5 +1,6 @@
 from app import ModelBase
 from sqlalchemy import Column, Integer, String, DateTime, Boolean, ForeignKey, LargeBinary, func
+from sqlalchemy.orm import relationship
 from dataclasses import dataclass
 from datetime import datetime
 
@@ -13,6 +14,7 @@ class Dataset(ModelBase):
     created_by: str = Column(String, nullable = False)
     created_at: datetime = Column(DateTime(timezone = True), nullable = False, server_default = func.now())
     updated_at: datetime = Column(DateTime(timezone = True), nullable = False, server_default = func.now(), onupdate = func.now())
+    files = relationship("Datafile", order_by = "Datafile.name")
 
 class Datafile(ModelBase):
     __tablename__ = "datafiles"
