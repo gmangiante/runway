@@ -35,6 +35,19 @@ const router = createRouter({
       path: "/models",
       name: "models",
       component: () => import("../views/ModelsView.vue"),
+    },
+    {
+      path: "/models/create/:dataset_id",
+      name: "createModel",
+      component: () => import("../views/CreateModelView.vue"),
+      props: true,
+      beforeEnter: authGuard
+    },
+    {
+      path: "/models/:id",
+      name: "modelDetail",
+      component: () => import("../views/ModelDetailView.vue"),
+      props: true
     }
   ],
 });

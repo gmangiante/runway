@@ -610,11 +610,6 @@ chalk@^4.0.0, chalk@^4.1.2:
     ansi-styles "^4.1.0"
     supports-color "^7.1.0"
 
-chart.js@^3.9.1:
-  version "3.9.1"
-  resolved "https://registry.npmjs.org/chart.js/-/chart.js-3.9.1.tgz"
-  integrity sha512-Ro2JbLmvg83gXF5F4sniaQ+lTbSv18E+TIf2cOeiH1Iqd2PGFOtem+DUufMZsCJwFE7ywPOpfXFBwRTGq7dh6w==
-
 check-error@^1.0.2:
   version "1.0.2"
   resolved "https://registry.npmjs.org/check-error/-/check-error-1.0.2.tgz"
@@ -1841,10 +1836,9 @@ magic-string@^0.25.7:
   dependencies:
     sourcemap-codec "^1.4.8"
 
-mdb-vue-ui-kit@^3.1.0:
+"mdb-vue-ui-kit@git+https://oauth2:y1CLfFktKfzxLugd8JsP@git.mdbootstrap.com/mdb/vue/mdb5/prd/mdb5-vue-ui-kit-pro-essential.git":
   version "3.1.0"
-  resolved "https://registry.yarnpkg.com/mdb-vue-ui-kit/-/mdb-vue-ui-kit-3.1.0.tgz#3416725429767ef13f6c969c1b6acdb790dd9dd6"
-  integrity sha512-oUoXke83SKWrZ8UARkMrIrhzy8Gi14NkXMGMoAr8nDMkP+KymI379pNPd+5DAXn9aqVQDqZw9x4y204M6iIJ0w==
+  resolved "git+https://oauth2:y1CLfFktKfzxLugd8JsP@git.mdbootstrap.com/mdb/vue/mdb5/prd/mdb5-vue-ui-kit-pro-essential.git#b6e0594159d05ceaa4c84c3bc0e00e4f8103a69a"
 
 memorystream@^0.3.1:
   version "0.3.1"
@@ -2770,11 +2764,6 @@ vitest@^0.24.3:
     tinypool "^0.3.0"
     tinyspy "^1.0.2"
     vite "^3.0.0"
-
-vue-chartjs@^4.1.2:
-  version "4.1.2"
-  resolved "https://registry.npmjs.org/vue-chartjs/-/vue-chartjs-4.1.2.tgz"
-  integrity sha512-QSggYjeFv/L4jFSBQpX8NzrAvX0B+Ha6nDgxkTG8tEXxYOOTwKI4phRLe+B4f+REnkmg7hgPY24R0cixZJyXBg==
 
 vue-cli-plugin-mdb5@~1.2.0:
   version "1.2.0"

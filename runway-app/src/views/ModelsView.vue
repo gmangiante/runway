@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import DatasetsTable from '@/components/DatasetsTable.vue'
+import ModelsTable from '@/components/ModelsTable.vue'
 import { MDBBtn, MDBSpinner, MDBBreadcrumb, MDBBreadcrumbItem } from 'mdb-vue-ui-kit';
 </script>
 
@@ -12,10 +12,10 @@ import { MDBBtn, MDBSpinner, MDBBreadcrumb, MDBBreadcrumbItem } from 'mdb-vue-ui
             <MDBBreadcrumbItem active>Models</MDBBreadcrumbItem>
           </MDBBreadcrumb>
         </nav>
-        <RouterLink to="/models/create" custom v-slot="{ navigate }" v-if="$auth0.isAuthenticated.value">
+        <!--<RouterLink to="/models/create" custom v-slot="{ navigate }" v-if="$auth0.isAuthenticated.value">
           <MDBBtn @click="navigate" role="link" color="primary" class="m-3">Add Model</MDBBtn>
-        </RouterLink>
-        <DatasetsTable />
+        </RouterLink>-->
+        <ModelsTable />
       </div>
       <template #fallback>
         <div class="d-flex justify-content-center mt-5">

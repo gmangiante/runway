@@ -9,23 +9,20 @@ import pandas as pd
 from io import StringIO
 
 datasets_api = Blueprint("datasets_api", __name__)
-CORS(datasets_api, supports_credentials = True, expose_headers=["Content-Type", "Authorization"], origins=['http://localhost:5173'])
+CORS(datasets_api, supports_credentials = True, expose_headers=["Content-Type", "Authorization"], origins=['http://localhost:5173', 'http://localhost:5174'])
 
 @datasets_api.route("/", methods = ["GET"])
 def list_datasets():
     user = session.get("user")
     if user is None:
-        return jsonify(app_db.session.query(Dataset).filter(Dataset.is_public.is_(True)).all())
+        return [dataset.serialize() for dataset in app_db.session.query(Dataset).filter(Dataset.is_public.is_(True)).all()], 200, {'Content-Type':'application/json'} 
     else:
-        return jsonify(app_db.session.query(Dataset).filter(or_(Dataset.is_public.is_(True), Dataset.created_by == user)).all())
+        return [dataset.serialize() for dataset in app_db.session.query(Dataset).filter(or_(Dataset.is_public.is_(True), Dataset.created_by == user)).all()], 200, {'Content-Type':'application/json'} 
 
 @datasets_api.route("/<id>", methods = ["GET"])
 def get_dataset_detail(id):
     result = app_db.session.get(Dataset, id)
-    json_result = jsonify(result).json
-    files = [{'id': file.id, 'name': file.name} for file in result.files]
-    json_result['files'] = files
-    return dumps(json_result), 200, {'Content-Type':'application/json'} 
+    return dumps(result.serialize()), 200, {'Content-Type':'application/json'} 
 
 @datasets_api.route("/", methods = ["POST"])
 @requires_auth
@@ -54,6 +51,7 @@ def analyze_dataset(id):
         if file.content_type == "text/csv":
             df = pd.read_csv(StringIO(file.content.decode()))
             file_analysis['nulls'] = df.isnull().sum().to_dict()
+            file_analysis['columns'] = [{ 'name': name, 'dtype': str(dtype) } for name, dtype in df.dtypes.items()]
         analysis[file.name] = file_analysis
 
     return dumps(analysis), 200, {'Content-Type':'application/json'}

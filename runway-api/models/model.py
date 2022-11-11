@@ -1,11 +1,22 @@
 from app import ModelBase
-from sqlalchemy import Column, Integer, String, DateTime, Boolean, ForeignKey, PickleType, JSON, Float, ARRAY, func
+from sqlalchemy import Column, Integer, String, DateTime, Boolean, ForeignKey, PickleType, JSON, Float, ARRAY, func, Table
+from sqlalchemy.orm import relationship
+from json import dumps
+
+class ModelDatafileAssociation(ModelBase):
+    __tablename__ = "model_datafile_associations",
+    model_id = Column(ForeignKey("models.id"), primary_key = True)
+    datafile_id = Column(ForeignKey("datafiles.id"), primary_key = True)
+    role = Column(String)
+    model = relationship("Model", back_populates = "datafiles")
+    datafile = relationship("Datafile", back_populates = "models")
    
 class Model(ModelBase):
     __tablename__ = "models"
 
     id = Column(Integer, primary_key = True, autoincrement = "auto", nullable = False)
     dataset_id = Column(Integer, ForeignKey("datasets.id"), nullable = False)
+    dataset = relationship("Dataset", back_populates = "models")
     name = Column(String, nullable = False)
     is_public = Column(Boolean, nullable = False)
     class_name = Column(String, nullable = False)
@@ -20,3 +31,19 @@ class Model(ModelBase):
     created_by = Column(String, nullable = False)
     created_at = Column(DateTime(timezone = True), nullable = False, server_default = func.now())
     updated_at = Column(DateTime(timezone = True), nullable = False, server_default = func.now(), onupdate = func.now())
+    datafiles = relationship("ModelDatafileAssociation", back_populates = "model")
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "dataset_id": self.dataset_id,
+            "name": self.name,
+            "is_public": self.is_public,
+            "class_name": self.class_name,
+            "params": dumps(self.params),
+            "target_name": self.target_name,
+            "feature_names": self.feature_names,
+            "created_by": self.created_by,
+            "created_at": str(self.created_at),
+            "updated_at": str(self.updated_at)
+        }

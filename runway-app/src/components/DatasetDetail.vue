@@ -1,15 +1,12 @@
 <script setup lang="ts">
 import type { Dataset } from '@/models/Dataset'
-import { MDBCard, MDBCardBody, MDBCardFooter, MDBBtn, MDBTable, MDBCardHeader, MDBListGroup, MDBListGroupItem, MDBRow, MDBCol } from 'mdb-vue-ui-kit';
+import { MDBCard, MDBCardBody, MDBCardFooter, MDBBtn, MDBTable, MDBCardHeader, MDBListGroup, MDBListGroupItem, MDBRow, MDBCol, MDBChart } from 'mdb-vue-ui-kit';
 import { $ } from 'vue/macros'
 import { useFetch } from '@/composables/fetch'
 import { useAuth0 } from '@auth0/auth0-vue';
-import { ref, computed, watchEffect } from 'vue'
-import type { Ref } from 'vue'
+import { ref, computed } from 'vue'
 import router from '@/router';
 import type { DatasetAnalysis } from '@/models/DatasetAnalysis'
-import ReactivePropChart from '@/components/ReactivePropChart.vue'
-import { setChartDatasets } from 'vue-chartjs/dist/utils';
 
 const props = defineProps({
     id: String
@@ -66,7 +63,7 @@ const chartData = computed(() => JSON.stringify(analysis.value) !== '{}' && sele
         Object.keys(analysis.value[selectedFile.value].nulls).filter(x => analysis.value[selectedFile.value].nulls[x] > 0).map(x => analysis.value[selectedFile.value].nulls[x]) : [])
 const chartLabels = computed(() => JSON.stringify(analysis.value) !== '{}' && selectedFile.value !== '' ?
         Object.keys(analysis.value[selectedFile.value].nulls).filter(x => analysis.value[selectedFile.value].nulls[x] > 0) : [])
-const chartDatasets = computed(() => Array({label: 'Nulls', backgroundColor: '#f87979', data: chartData.value }))
+const chartDatasets = computed(() => { return { labels: chartLabels.value, datasets: Array({ label: 'Nulls', backgroundColor: '#f87979', data: chartData.value})} } )
 
 </script>
 
@@ -114,6 +111,9 @@ const chartDatasets = computed(() => Array({label: 'Nulls', backgroundColor: '#f
         </MDBCard>
         <MDBCard class="w-100">
             <MDBCardHeader>
+                <RouterLink :to="'/models/create/' + data?.id">
+                    <MDBBtn color="primary">Create Model</MDBBtn>
+                </RouterLink>
                 <MDBBtn color="primary" @click="analyze()">Analyze</MDBBtn>
             </MDBCardHeader>
             <MDBCardBody>
@@ -123,8 +123,16 @@ const chartDatasets = computed(() => Array({label: 'Nulls', backgroundColor: '#f
                             <MDBListGroupItem v-for="file in Object.keys(analysis)" tag="button" class="px-3 border-0" action @click="selectedFile = file" :active="selectedFile == file">{{ file }}</MDBListGroupItem>
                         </MDBListGroup>
                     </MDBCol>
-                    <MDBCol col="4">
-                        <ReactivePropChart v-if="analysis[selectedFile]" :labels="chartLabels" :datasets="chartDatasets" />
+                    <MDBCol v-if="analysis[selectedFile]" col="4">
+                        <MDBTable>
+                            <tr v-for="col in analysis[selectedFile].columns">
+                                <td>{{col.name}}</td>
+                                <td>{{col.dtype}}</td>
+                            </tr>
+                        </MDBTable>
+                    </MDBCol>
+                    <MDBCol v-if="analysis[selectedFile]" col="4">
+                        <MDBChart type="bar" :data="chartDatasets" />
                     </MDBCol>
                 </MDBRow>
             </MDBCardBody>

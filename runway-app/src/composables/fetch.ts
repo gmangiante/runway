@@ -58,7 +58,7 @@ export const useFetch = async <T>(
         finally {
             state.isLoading = false
         }
-        //console.log(state)
+        console.log(state)
     }
 
     if (isRef(url) || isRef(options))

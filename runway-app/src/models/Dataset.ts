@@ -1,6 +1,7 @@
 export interface Datafile {
     id: number,
-    name: string
+    name: string,
+    role: string | undefined
 }
 
 export class Dataset {
