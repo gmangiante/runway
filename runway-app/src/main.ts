@@ -11,7 +11,8 @@ import 'mdb-vue-ui-kit/css/mdb.min.css';
 const app = createApp(App);
 
 app.use(createPinia());
-app.use(router);
+app.use(router)
+
 
 app.use(
     createAuth0({

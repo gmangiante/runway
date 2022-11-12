@@ -15,6 +15,25 @@
                 "--no-debugger"
             ],
             "jinja": true
+        },
+        {
+            "name": "Python: GUnicorn",
+            "type": "python",
+            "cwd": "${workspaceFolder}/runway-api",
+            "request": "launch",
+            "program": "/home/gabe/anaconda3/bin/gunicorn",
+            "gevent": true,
+            "args": [
+                "app:app",
+                "--worker-class",
+                "gevent",
+                "--bind",
+                "0.0.0.0:5000",
+                "--reload",
+                "--log-level",
+                "debug"
+            ],
+            "console": "integratedTerminal"
         }
     ]
 }

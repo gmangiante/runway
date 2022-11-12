@@ -34,7 +34,7 @@ const potentialTargets = computed(() => {
         .map(c => Object.keys(c).map(k => c[k].name))
     return colNames.reduce((intersection, array) => {
         return intersection.filter(intersectedItem => array.some(item => intersectedItem === item));
-    }, colNames[0])
+    }, colNames[0]).filter(c => !c.startsWith('Unnamed'))
 })
 
 const potentialTargetsAsOptions = computed(() => potentialTargets.value ? potentialTargets.value

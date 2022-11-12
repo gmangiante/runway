@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import type { Dataset } from '@/models/Dataset'
-import { MDBCard, MDBCardBody, MDBCardFooter, MDBBtn, MDBTable, MDBCardHeader, MDBListGroup, MDBListGroupItem, MDBRow, MDBCol, MDBChart } from 'mdb-vue-ui-kit';
+import { MDBCard, MDBCardBody, MDBCardFooter, MDBBtn, MDBTable, MDBCardHeader, MDBListGroup, MDBListGroupItem, MDBRow, MDBCol, MDBChart, MDBToast, MDBSpinner } from 'mdb-vue-ui-kit';
 import { $ } from 'vue/macros'
 import { useFetch } from '@/composables/fetch'
 import { useAuth0 } from '@auth0/auth0-vue';
 import { ref, computed } from 'vue'
-import router from '@/router';
+import router from '@/router'
+import { transformStyle } from '@vue/compiler-dom';
 
 const props = defineProps({
     id: String
@@ -33,6 +34,30 @@ async function fitModel() {
 const { user } = $(useAuth0())
 
 const isOwner = ref(user.email === data?.created_by)
+
+const evtSource = new EventSource("//localhost:5000/events?channel=model_fit", { withCredentials: true } )
+
+evtSource.addEventListener("start", (event) => {
+    const event_json = JSON.parse(event.data)
+    if (event_json['model_id'] == data?.id) {
+        toast.value.show = false
+        isFitting.value = true
+    }
+})
+
+evtSource.addEventListener("complete", (event) => {
+    const event_json = JSON.parse(event.data)
+    if (event_json['model_id'] == data?.id) {
+        isFitting.value = false
+        toast.value.model_name = data?.name || ''
+        toast.value.train_score = event_json['train_score']
+        toast.value.val_score = event_json['val_score']
+        toast.value.show = true
+    }
+})
+
+const isFitting = ref(false)
+const toast = ref({show: false, model_name: '', train_score: 0, val_score: 0})
 
 </script>
 
@@ -69,5 +94,19 @@ const isOwner = ref(user.email === data?.created_by)
                 <MDBBtn color="danger" v-if="isOwner" @click="deleteModel()">Delete model</MDBBtn>
             </MDBCardFooter>
         </MDBCard>
+        <span v-if="isFitting">
+            <MDBSpinner /> Fitting in progress...
+        </span>
+        <MDBToast
+            v-model="toast.show"
+            :position="'bottom-right'"
+            width="350px"
+            toast="primary"
+            
+        >
+            <template #title> {{ toast.model_name }} </template>
+            <template #small> Fit complete </template>
+            train: {{ toast.train_score}}, val: {{ toast.val_score }}
+        </MDBToast>
     </main>
 </template>

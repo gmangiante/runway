@@ -9,7 +9,6 @@ import pandas as pd
 from io import StringIO
 
 datasets_api = Blueprint("datasets_api", __name__)
-CORS(datasets_api, supports_credentials = True, expose_headers=["Content-Type", "Authorization"], origins=['http://localhost:5173', 'http://localhost:5174'])
 
 @datasets_api.route("/", methods = ["GET"])
 def list_datasets():

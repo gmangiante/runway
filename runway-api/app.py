@@ -8,10 +8,16 @@ from sqlalchemy_utils import database_exists, create_database
 from flask_session import Session
 from urllib.request import urlopen
 from json import loads
+from flask_sse import sse
+from flask_cors import CORS
 
 app = Flask(__name__)
 app.config["SESSION_PERMANENT"] = True
 app.config["SESSION_TYPE"] = "filesystem"
+app.config["REDIS_URL"] = "redis://localhost"
+CORS(app, supports_credentials = True, expose_headers=["Content-Type", "Authorization"],
+    origins=['http://localhost:5173', 'http://localhost:5174'])
+
 Session(app)
 
 ENV_FILE = find_dotenv()
@@ -52,6 +58,8 @@ from models_api import models_api
 app.register_blueprint(auth_api)
 app.register_blueprint(datasets_api, url_prefix = '/api/datasets')
 app.register_blueprint(models_api, url_prefix = '/api/models')
+
+app.register_blueprint(sse, url_prefix='/events')
 
 print("Up and running!")
 
