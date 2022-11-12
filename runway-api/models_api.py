@@ -12,9 +12,11 @@ from models.model import ModelDatafileAssociation
 from models.dataset import Datafile
 import pandas as pd
 from io import StringIO
+from flask_sse import sse
+from multiprocessing import Process
+import time
 
 models_api = Blueprint('models_api', __name__)
-CORS(models_api, supports_credentials = True, expose_headers=["Content-Type", "Authorization"], origins=['http://localhost:5173', 'http://localhost:5174'])
 
 @models_api.route("/", methods = ["GET"])
 def list_models():
@@ -54,6 +56,8 @@ def create_model():
 @requires_auth
 def delete_model(id):
     model = app_db.session.get(Model, id)
+    for assoc in model.datafiles:
+        app_db.session.delete(assoc)
     app_db.session.delete(model)
     app_db.session.commit()
     return dumps({'success':True}), 200, {'Content-Type':'application/json'}
@@ -94,6 +98,18 @@ def fit_model(id):
 
     model_instance = pickle.loads(model.saved_model)
 
-    model_instance.fit(X_train, y_train)
-    return dumps({'success': True, 'train_score': model_instance.score(X_train, y_train),
-        'val_score': model_instance.score(X_val, y_val)}), 200, {'Content-Type':'application/json'}
+    sse.publish({'model_id': model.id}, type = "start", channel = "model_fit")
+    
+    fit_process = Process(
+        target = run_fit(model.id, model_instance, X_train, y_train, X_val, y_val),
+        daemon = True
+    )
+    fit_process.start()
+
+    return dumps({'success': True }), 200, {'Content-Type':'application/json'}
+
+def run_fit(model_id, model, X_train, y_train, X_val, y_val):
+    model.fit(X_train, y_train)
+    time.sleep(3)
+    sse.publish({'model_id': model_id, 'train_score': round(model.score(X_train, y_train), 4),
+        'val_score': round(model.score(X_val, y_val), 4)}, type = "complete", channel = "model_fit")
