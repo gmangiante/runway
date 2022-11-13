@@ -41,6 +41,14 @@ def delete_dataset(id):
     app_db.session.commit()
     return dumps({'success':True}), 200, {'Content-Type':'application/json'}
 
+@datasets_api.route("sharing/<id>/<is_public>", methods = ["POST"])
+@requires_auth
+def set_sharing(id, is_public):
+    ds = app_db.session.get(Dataset, id)
+    ds.is_public = True if is_public == "true" else False
+    app_db.session.commit()
+    return dumps({'success':True}), 200, {'Content-Type':'application/json'}
+
 @datasets_api.route("/analyze/<id>", methods = ["GET"])
 def analyze_dataset(id):
     analysis = { }

@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import type { Dataset } from '@/models/Dataset'
-import { MDBCard, MDBCardBody, MDBCardFooter, MDBBtn, MDBTable, MDBCardHeader, MDBListGroup, MDBListGroupItem, MDBRow, MDBCol, MDBChart, MDBToast, MDBSpinner } from 'mdb-vue-ui-kit';
+import { MDBCard, MDBCardBody, MDBCardFooter, MDBBtn, MDBTable, MDBCardHeader, MDBListGroup, MDBListGroupItem, MDBRow, MDBCol, MDBChart, MDBIcon, MDBToast, MDBSpinner } from 'mdb-vue-ui-kit';
 import { $ } from 'vue/macros'
 import { useFetch } from '@/composables/fetch'
 import { useAuth0 } from '@auth0/auth0-vue';
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import router from '@/router'
-import { transformStyle } from '@vue/compiler-dom';
 
 const props = defineProps({
     id: String
@@ -24,89 +23,78 @@ async function deleteModel() {
 }
 
 async function fitModel() {
+    isFitting.value = true
     const fitFetch = await useFetch<{success: Boolean}>(`http://localhost:5000/api/models/fit/${data?.id}`, 
         { method: 'POST' })
     if (fitFetch.data.value?.success) {
         console.log(fitFetch.data.value)
     }
+    isFitting.value = false
 }
 
 const { user } = $(useAuth0())
 
 const isOwner = ref(user.email === data?.created_by)
 
-const evtSource = new EventSource("//localhost:5000/events?channel=model_fit", { withCredentials: true } )
 
-evtSource.addEventListener("start", (event) => {
-    const event_json = JSON.parse(event.data)
-    if (event_json['model_id'] == data?.id) {
-        toast.value.show = false
-        isFitting.value = true
+async function setPublic(isPublic: boolean) {
+    const sharingFetch = await useFetch<{success: boolean}>(`http://localhost:5000/api/models/sharing/${data?.id}/${isPublic}`, { method: 'POST'})
+    if (!sharingFetch.hasError.value) {
+        if (data) data.is_public = isPublic
     }
-})
-
-evtSource.addEventListener("complete", (event) => {
-    const event_json = JSON.parse(event.data)
-    if (event_json['model_id'] == data?.id) {
-        isFitting.value = false
-        toast.value.model_name = data?.name || ''
-        toast.value.train_score = event_json['train_score']
-        toast.value.val_score = event_json['val_score']
-        toast.value.show = true
-    }
-})
+}
 
 const isFitting = ref(false)
-const toast = ref({show: false, model_name: '', train_score: 0, val_score: 0})
+
 
 </script>
 
 <template>
-    <main>
-        <MDBCard class="w-100">
-            <MDBCardBody>
-                <MDBTable>
-                    <tr>
-                        <th scope="row">Name</th>
-                        <td>{{ data?.name }}</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Public</th>
-                        <td>{{ data?.is_public }}</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Created by</th>
-                        <td>{{ data?.created_by }}</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Created at</th>
-                        <td>{{ data?.created_at }}</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Updated at</th>
-                        <td>{{ data?.updated_at }}</td>
-                    </tr>
-                </MDBTable>
-            </MDBCardBody>
-            <MDBCardFooter>
-                <MDBBtn color="primary" v-if="isOwner" @click="fitModel()">Fit model</MDBBtn>
-                <RouterLink to="/models"><MDBBtn color="primary">Go back</MDBBtn></RouterLink>
-                <MDBBtn color="danger" v-if="isOwner" @click="deleteModel()">Delete model</MDBBtn>
-            </MDBCardFooter>
-        </MDBCard>
-        <span v-if="isFitting">
-            <MDBSpinner /> Fitting in progress...
-        </span>
-        <MDBToast
-            v-model="toast.show"
-            :position="'bottom-right'"
-            width="350px"
-            toast="primary"
-            
-        >
-            <template #title> {{ toast.model_name }} </template>
-            <template #small> Fit complete </template>
-            train: {{ toast.train_score}}, val: {{ toast.val_score }}
-        </MDBToast>
-    </main>
+        <MDBCard border="dark" style="max-width: 800px" >
+        <MDBCardHeader border="dark">
+            <MDBRow>
+                <MDBCol col="8">Dataset info</MDBCol>
+                <MDBCol col="3">
+                    <span><strong>Sharing:</strong> {{ data?.is_public ? "Public" : "Private" }}</span>
+                </MDBCol>
+                <MDBCol col="1">
+                    <template v-if="isOwner && data?.is_public">
+                        <MDBBtn @click="setPublic(false)" floating color="primary" class="me-2">
+                            <MDBIcon icon="lock" />
+                        </MDBBtn>
+                    </template>
+                    <template v-if="isOwner && !data?.is_public">
+                        <MDBBtn @click="setPublic(true)" floating color="primary" class="me-2">
+                            <MDBIcon icon="share-alt" />
+                        </MDBBtn>
+                    </template>
+                </MDBCol>
+            </MDBRow>
+        </MDBCardHeader>
+        <MDBCardBody>
+            <MDBRow>
+                <MDBCol col="3"><strong>Name</strong></MDBCol>
+                <MDBCol col="9">{{ data?.name }}</MDBCol>
+            </MDBRow>
+            <MDBRow>
+                <MDBCol col="3"><strong>Author</strong></MDBCol>
+                <MDBCol col="9">{{ data?.created_by }}</MDBCol>
+            </MDBRow>
+            <MDBRow>
+                <MDBCol col="3"><strong>Created</strong></MDBCol>
+                <MDBCol col="9">{{ data ? new Date(data.created_at).toLocaleString() : "" }}</MDBCol>
+            </MDBRow>
+            <MDBRow>
+                <MDBCol col="3"><strong>Updated</strong></MDBCol>
+                <MDBCol col="9">{{ data ? new Date(data.updated_at).toLocaleString() : "" }}</MDBCol>
+            </MDBRow>
+        </MDBCardBody>
+        <MDBCardFooter border="dark">
+            <MDBBtn color="primary" v-if="isOwner" @click="fitModel()">Fit model</MDBBtn>
+            <MDBBtn color="danger" v-if="isOwner" @click="deleteModel()">Delete model</MDBBtn>
+            <div v-if="isFitting" class="mt-3">
+                <MDBSpinner /> Fitting in progress...
+            </div>
+        </MDBCardFooter>
+    </MDBCard>
 </template>

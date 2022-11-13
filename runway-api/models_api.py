@@ -62,6 +62,14 @@ def delete_model(id):
     app_db.session.commit()
     return dumps({'success':True}), 200, {'Content-Type':'application/json'}
 
+@models_api.route("sharing/<id>/<is_public>", methods = ["POST"])
+@requires_auth
+def set_sharing(id, is_public):
+    model = app_db.session.get(Model, id)
+    model.is_public = True if is_public == "true" else False
+    app_db.session.commit()
+    return dumps({'success':True}), 200, {'Content-Type':'application/json'}
+
 @models_api.route("/fit/<id>", methods = ["POST"])
 @requires_auth
 def fit_model(id):
@@ -101,15 +109,15 @@ def fit_model(id):
     sse.publish({'model_id': model.id}, type = "start", channel = "model_fit")
     
     fit_process = Process(
-        target = run_fit(model.id, model_instance, X_train, y_train, X_val, y_val),
+        target = run_fit(model.id, model.name, model.created_by, model_instance, X_train, y_train, X_val, y_val),
         daemon = True
     )
     fit_process.start()
 
     return dumps({'success': True }), 200, {'Content-Type':'application/json'}
 
-def run_fit(model_id, model, X_train, y_train, X_val, y_val):
+def run_fit(model_id, name, created_by, model, X_train, y_train, X_val, y_val):
     model.fit(X_train, y_train)
     time.sleep(3)
-    sse.publish({'model_id': model_id, 'train_score': round(model.score(X_train, y_train), 4),
+    sse.publish({'model_id': model_id, 'name': name, 'created_by': created_by,  'train_score': round(model.score(X_train, y_train), 4),
         'val_score': round(model.score(X_val, y_val), 4)}, type = "complete", channel = "model_fit")

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Dataset } from '@/models/Dataset'
 import { reactive, ref } from 'vue'
-import { MDBInput, MDBCard, MDBCardBody, MDBBtn, MDBRow, MDBCol, MDBSwitch, MDBCardTitle, MDBFile, MDBListGroup, MDBListGroupItem } from 'mdb-vue-ui-kit';
+import { MDBInput, MDBCard, MDBCardBody, MDBBtn, MDBRow, MDBCol, MDBSwitch, MDBCardTitle, MDBFile, MDBListGroup, MDBListGroupItem, MDBCardHeader, MDBCardFooter } from 'mdb-vue-ui-kit';
 import { useAuth0 } from '@auth0/auth0-vue';
 import { $ } from 'vue/macros'
 import { useFetch } from '@/composables/fetch'
@@ -34,38 +34,52 @@ async function submitForm(e: Event) {
 </script>
 
 <template>
-    <MDBCard class="w-50">
-        <MDBCardBody>
-            <MDBRow tag="form" class="g-3" @submit="submitForm">
-                <MDBCol col="12">
-                    <MDBInput label="Dataset name" v-model="newDataset.name" class="mb-3" required />
-                </MDBCol>
-                <MDBCol col="12">
-                    <MDBSwitch :label="newDataset.is_public ? 'Public' : 'Private'" v-model="newDataset.is_public" />
-                </MDBCol>
-                <MDBCol col="12">
-                    <DropZone @files-dropped="addFiles" #default="{ dropZoneActive }">
-                        <MDBCardTitle v-if="dropZoneActive">
-                            Drop here
-                        </MDBCardTitle>
-                        <MDBCardTitle v-else>
-                            Drag files here or
-                        </MDBCardTitle>
-                        <MDBFile multiple @change="onInputChange" />
-                        <MDBListGroup flush v-show="files.length">
-                            <MDBListGroupItem v-for="file of files" :key="file.id" >
-                                <FilePreview :file="file" @remove="removeFile" />
-                            </MDBListGroupItem>
-                        </MDBListGroup>
-                    </DropZone>
-                </MDBCol>
-                <MDBCol col="12">
-                    <MDBBtn color="primary" type="submit">Create dataset</MDBBtn>
-                    <RouterLink to="/datasets"><MDBBtn color="secondary">Cancel</MDBBtn></RouterLink>
-                </MDBCol>
-            </MDBRow>
-        </MDBCardBody>
-    </MDBCard>
+    <MDBCol tag="form" class="g-3" @submit="submitForm">
+        <MDBCard border="dark" style="max-width: 800px">
+            <MDBCardHeader border="dark">Dataset info</MDBCardHeader>
+            <MDBCardBody>
+                <MDBRow>
+                    <MDBCol col="12">
+                        <MDBInput label="Dataset name" v-model="newDataset.name" class="mb-3" required />
+                    </MDBCol>
+                    <MDBCol col="12">
+                        <MDBSwitch :label="newDataset.is_public ? 'Public' : 'Private'" v-model="newDataset.is_public" />
+                    </MDBCol>
+                </MDBRow>
+            </MDBCardBody>
+        </MDBCard>
+        <MDBCard border="dark" style="max-width: 800px" class="mt-3">
+            <MDBCardHeader border="dark">Files</MDBCardHeader>
+            <MDBCardBody>
+                <MDBRow>
+                    <MDBCol col="12">
+                        <DropZone @files-dropped="addFiles" #default="{ dropZoneActive }">
+                            <MDBCardTitle v-if="dropZoneActive">
+                                Drop here
+                            </MDBCardTitle>
+                            <MDBCardTitle v-else>
+                                Drag files here or
+                            </MDBCardTitle>
+                            <MDBFile multiple @change="onInputChange" />
+                            <MDBListGroup flush v-show="files.length">
+                                <MDBListGroupItem v-for="file of files" :key="file.id" >
+                                    <FilePreview :file="file" @remove="removeFile" />
+                                </MDBListGroupItem>
+                            </MDBListGroup>
+                        </DropZone>
+                    </MDBCol>
+                </MDBRow>
+            </MDBCardBody>
+            <MDBCardFooter border="dark">
+                <MDBRow>
+                    <MDBCol col="12">
+                        <MDBBtn color="primary" type="submit">Create dataset</MDBBtn>
+                        <RouterLink to="/datasets"><MDBBtn color="secondary">Cancel</MDBBtn></RouterLink>
+                    </MDBCol>
+                </MDBRow>
+            </MDBCardFooter>
+        </MDBCard>
+    </MDBCol>
 </template>
 
 <style>

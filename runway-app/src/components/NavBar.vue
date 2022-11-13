@@ -2,7 +2,7 @@
 import { ref } from 'vue';
 import { $ } from 'vue/macros'
 import { useAuth0 } from '@auth0/auth0-vue';
-import { MDBNavbar, MDBNavbarBrand, MDBNavbarToggler, MDBCollapse, MDBNavbarNav, MDBNavbarItem, MDBBtn } from 'mdb-vue-ui-kit';
+import { MDBNavbar, MDBNavbarBrand, MDBNavbarToggler, MDBCollapse, MDBNavbarNav, MDBNavbarItem, MDBBtn, MDBIcon, MDBToast } from 'mdb-vue-ui-kit';
 
 const navbarCollapsed = ref(false);
 const { loginWithRedirect, user, isAuthenticated, logout } = $(useAuth0())
@@ -14,6 +14,22 @@ function doLogin() {
 function doLogout() {
   logout();
 }
+
+
+const evtSource = new EventSource("//localhost:5000/events?channel=model_fit", { withCredentials: true } )
+
+evtSource.addEventListener("complete", (event) => {
+    const event_json = JSON.parse(event.data)
+    if (event_json['created_by'] == user.email) {
+      toastVals.value.model_name = event_json['name']
+      toastVals.value.train_score = event_json['train_score']
+      toastVals.value.val_score = event_json['val_score']
+      showToast.value = true
+    }
+})
+
+const toastVals = ref({show: false, model_name: '', train_score: 0, val_score: 0})
+const showToast = ref(false)
 
 </script>
 
@@ -34,6 +50,18 @@ function doLogout() {
         <small class="navbar-text mt-1 me-5 text-muted">&copy; 2022 Gabriel Mangiante</small>
         <template v-if="isAuthenticated">
           <div>
+          <MDBIcon icon="bell" icon-style="far" size="lg" class="me-2" />
+          <MDBToast
+            v-model="showToast"
+            :position="'top-right'"
+            width="350px"
+            toast="primary"
+            autohide stacking appendToBody :delay="2000"
+        >
+            <template #title> {{ toastVals.model_name }} </template>
+            <template #small> Fit complete </template>
+            train: {{ toastVals.train_score}}, val: {{ toastVals.val_score }}
+        </MDBToast>
           <img
             src="https://avatars.githubusercontent.com/u/3937358?s=120&v=4"
             class="rounded-circle m-2"
