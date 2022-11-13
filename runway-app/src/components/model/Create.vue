@@ -5,7 +5,7 @@ import { useAuth0 } from '@auth0/auth0-vue';
 import { useFetch } from '@/composables/fetch'
 import type { Dataset } from '@/models/Dataset'
 import { MDBCard, MDBCardBody, MDBBreadcrumb, MDBBreadcrumbItem, MDBRow, MDBCol, MDBSelect, MDBSpinner } from 'mdb-vue-ui-kit';
-import CreateLinearRegression from '@/components/model/CreateLinearRegression.vue'
+import CreateLinearRegression from '@/components/model/linearRegression/Create.vue'
 
 const props = defineProps({
     dataset_id: String
