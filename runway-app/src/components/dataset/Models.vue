@@ -1,0 +1,39 @@
+<script setup lang="ts">
+import type { PropType } from 'vue'
+import { ref } from 'vue'
+import { $ } from 'vue/macros'
+import { useAuth0 } from '@auth0/auth0-vue';
+import type { Dataset } from '@/models/Dataset'
+import router from '@/router';
+import { MDBDatatable } from 'mdb-vue-ui-kit';
+
+const props = defineProps({
+    dataset: Object as PropType<Dataset>
+})
+
+const { user } = $(useAuth0())
+const isOwner = ref(user?.email && (user.email === props.dataset?.created_by))
+
+const modelTableColumns = [
+  { label: 'Sharing', field: 'sharing', width: 50, fixed: true, sort: true },
+  { label: 'Name', field: 'name', sort: true },
+  { label: 'Author', field: 'created_by', sort: true }
+]
+const modelTableLoading = ref(false)
+
+const modelTableData = { columns: modelTableColumns,
+  rows: props.dataset?.models?.map(model => {
+    return { ...model,
+      sharing: model.is_public ? `<i class="fa fa-share-alt" />` : `<i class="fa fa-lock" />`
+    } }) || [] }
+
+const goToModelDetail = async (tableRowIndex: number) => {
+    if (props.dataset?.models) await router.push({ name: 'modelDetail', params: { id: props.dataset.models[tableRowIndex].id } })
+}
+
+</script>
+
+<template>
+    <MDBDatatable :dataset="modelTableData" :maxWidth="750" style="cursor:pointer"
+        fixedHeader clickable @row-click="goToModelDetail" :loading="modelTableLoading" />
+</template>

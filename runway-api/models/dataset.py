@@ -25,7 +25,8 @@ class Dataset(ModelBase):
             "created_by": self.created_by,
             "created_at": str(self.created_at),
             "updated_at": str(self.updated_at),
-            "files": [file.serialize() for file in self.files]
+            "files": [file.serialize() for file in self.files],
+            "models": [model.serialize() for model in self.models]
         }
 
 class Datafile(ModelBase):

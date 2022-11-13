@@ -7,49 +7,44 @@ const router = createRouter({
     {
       path: "/",
       name: "home",
-      component: () => import("../views/HomeView.vue"),
-    },
-    {
-      path: "/about",
-      name: "about",
-      component: () => import("../views/AboutView.vue"),
+      component: () => import("../components/Home.vue"),
     },
     {
       path: "/datasets",
-      name: "datasets",
-      component: () => import("../views/DatasetsView.vue"),
-    },
-    {
-      path: "/datasets/create",
-      name: "createDataset",
-      component: () => import("../views/CreateDatasetView.vue"),
-      beforeEnter: authGuard
+      name: "datasetList",
+      component: () => import("../components/dataset/List.vue"),
     },
     {
       path: "/datasets/:id",
       name: "datasetDetail",
-      component: () => import("../views/DatasetDetailView.vue"),
+      component: () => import("../components/dataset/Detail.vue"),
       props: true
     },
     {
-      path: "/models",
-      name: "models",
-      component: () => import("../views/ModelsView.vue"),
+      path: "/datasets/create",
+      name: "createDataset",
+      component: () => import("../components/dataset/Create.vue"),
+      beforeEnter: authGuard
     },
     {
-      path: "/models/create/:dataset_id",
-      name: "createModel",
-      component: () => import("../views/CreateModelView.vue"),
-      props: true,
-      beforeEnter: authGuard
+      path: "/models",
+      name: "modelList",
+      component: () => import("../components/model/List.vue"),
     },
     {
       path: "/models/:id",
       name: "modelDetail",
-      component: () => import("../views/ModelDetailView.vue"),
+      component: () => import("../components/model/Detail.vue"),
       props: true
+    },
+    {
+      path: "/models/create/:dataset_id",
+      name: "createModel",
+      component: () => import("../components/model/Create.vue"),
+      props: true,
+      beforeEnter: authGuard
     }
-  ],
+  ]
 });
 
 export default router;
