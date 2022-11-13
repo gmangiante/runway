@@ -6,7 +6,7 @@ import { useAuth0 } from '@auth0/auth0-vue'
 import { useFetch } from '@/composables/fetch'
 import type { Model } from '@/models/Model'
 import router from '@/router'
-import { MDBBtn } from 'mdb-vue-ui-kit'
+import { MDBBtn, MDBSpinner } from 'mdb-vue-ui-kit'
 
 const props = defineProps({
     model: Object as PropType<Model>

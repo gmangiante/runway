@@ -13,23 +13,23 @@ const props = defineProps({
     <MDBTable style="max-width: 750px">
         <tr>
             <th scope="row"><strong>Name</strong></th>
-            <td>{{ props.model?.name }}</td>
+            <td>{{ model?.name }}</td>
         </tr>
         <tr>
             <th scope="row"><strong>Author</strong></th>
-            <td>{{ props.model?.created_by }}</td>
+            <td>{{ model?.created_by }}</td>
         </tr>
         <tr>
             <th scope="row"><strong>Created</strong></th>
-            <td>{{ props.model ? new Date(props.model.created_at).toLocaleString() : '' }}</td>
+            <td>{{ model ? new Date(model.created_at).toLocaleString() : '' }}</td>
         </tr>
         <tr>
             <th scope="row"><strong>Updated</strong></th>
-            <td>{{ props.model ? new Date(props.model.updated_at).toLocaleString() : '' }}</td>
+            <td>{{ model ? new Date(model.updated_at).toLocaleString() : '' }}</td>
         </tr>
         <tr>
             <th scope="row"><strong>Sharing</strong></th>
-            <td>{{ props.model?.is_public ? "Public" : "Private" }}</td>
+            <td>{{ model?.is_public ? "Public" : "Private" }}</td>
         </tr>
     </MDBTable>
 </template>

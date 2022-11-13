@@ -30,16 +30,20 @@ const tableLoading = ref(false)
 </script>
 
 <template>
-    <template v-if="data.length == 0">
-        <span>No nulls found</span>
-    </template>
-    <template v-else>
-        <template v-if="viewCharts">
-            <MDBChart id="nullChart" type="bar" :data="chartData" />
+    <div>
+        <template v-if="data.length == 0">
+            <span>No nulls found</span>
         </template>
         <template v-else>
-            <MDBDatatable :dataset="tableData" :loading="tableLoading" />
+            <div>
+                <template v-if="viewCharts">
+                    <MDBChart id="nullChart" type="bar" :data="chartData" />
+                </template>
+                <template v-else>
+                    <MDBDatatable :dataset="tableData" :loading="tableLoading" />
+                </template>]
+            </div>
         </template>
-    </template>
-    <MDBSwitch :label="viewCharts ? 'View as charts' : 'View as tables'" v-model="viewCharts" class="ms-auto" /> 
+        <MDBSwitch :label="viewCharts ? 'View as charts' : 'View as tables'" v-model="viewCharts" class="ms-auto" /> 
+    </div>
 </template>

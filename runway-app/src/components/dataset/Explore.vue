@@ -28,23 +28,25 @@ const analyze = async () => {
 </script>
 
 <template>
-    <MDBDropdown v-model="fileDropdown" class="ms-4 mt-4 mb-4">
-        <MDBDropdownToggle @click="fileDropdown = !fileDropdown">
-            <span>{{ selectedFile == '' ? "Choose file" : selectedFile }}</span>
-        </MDBDropdownToggle>
-            <MDBDropdownMenu>
-                <MDBDropdownItem v-for="file in props.dataset?.files" tag="button" @click="selectedFile = file.name">{{ file.name }}</MDBDropdownItem>
-            </MDBDropdownMenu>
-    </MDBDropdown>
-    <span v-if="selectedFile == ''" class="ms-4">Choose file above</span>
-    <MDBTabs v-model="activeTab" v-if="selectedFile != ''" class="mt-4">
-        <MDBTabNav tabsClasses="mb-3">
-            <MDBTabItem tabId="datatypes" href="datatypes">Data types</MDBTabItem>
-            <MDBTabItem tabId="nulls" href="nulls">Nulls</MDBTabItem>
-        </MDBTabNav>
-        <MDBTabContent>
-            <MDBTabPane tabId="datatypes"><DataTypesAnalysis :analysis="analysis[selectedFile]" /></MDBTabPane>
-            <MDBTabPane tabId="nulls"><NullsAnalysis :analysis="analysis[selectedFile]" /></MDBTabPane>
-        </MDBTabContent>
-    </MDBTabs>
+    <div>
+        <MDBDropdown v-model="fileDropdown" class="ms-4 mt-4 mb-4">
+            <MDBDropdownToggle @click="fileDropdown = !fileDropdown">
+                <span>{{ selectedFile == '' ? "Choose file" : selectedFile }}</span>
+            </MDBDropdownToggle>
+                <MDBDropdownMenu>
+                    <MDBDropdownItem v-for="file in props.dataset?.files" tag="button" @click="selectedFile = file.name">{{ file.name }}</MDBDropdownItem>
+                </MDBDropdownMenu>
+        </MDBDropdown>
+        <span v-if="selectedFile == ''" class="ms-4">Choose file above</span>
+        <MDBTabs v-model="activeTab" v-if="selectedFile !== ''" class="mt-4">
+            <MDBTabNav tabsClasses="mb-3">
+                <MDBTabItem tabId="datatypes" href="datatypes">Data types</MDBTabItem>
+                <MDBTabItem tabId="nulls" href="nulls">Nulls</MDBTabItem>
+            </MDBTabNav>
+            <MDBTabContent>
+                <MDBTabPane tabId="datatypes"><DataTypesAnalysis :analysis="analysis[selectedFile]" /></MDBTabPane>
+                <MDBTabPane tabId="nulls"><NullsAnalysis :analysis="analysis[selectedFile]" /></MDBTabPane>
+            </MDBTabContent>
+        </MDBTabs>
+    </div>
 </template>

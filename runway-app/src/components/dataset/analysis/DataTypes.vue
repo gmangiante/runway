@@ -37,11 +37,13 @@ const tableLoading = ref(false)
 
 
 <template>
-    <template v-if="viewCharts">
-        <MDBChart type="bar" :data="chartData" />
-    </template>
-    <template v-else>
-        <MDBDatatable :dataset="tableData" :loading="tableLoading" />
-    </template>
-    <MDBSwitch :label="viewCharts ? 'View as charts' : 'View as tables'" v-model="viewCharts" class="ms-auto" /> 
+    <div>
+        <template v-if="viewCharts">
+            <MDBChart type="bar" :data="chartData" />
+        </template>
+        <template v-else>
+            <MDBDatatable :dataset="tableData" :loading="tableLoading" />
+        </template>
+        <MDBSwitch :label="viewCharts ? 'View as charts' : 'View as tables'" v-model="viewCharts" class="ms-auto" /> 
+    </div>
 </template>
