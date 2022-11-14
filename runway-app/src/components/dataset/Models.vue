@@ -17,7 +17,9 @@ const isOwner = ref(user?.email && (user.email === props.dataset?.created_by))
 const modelTableColumns = [
   { label: 'Sharing', field: 'sharing', width: 50, fixed: true, sort: true },
   { label: 'Name', field: 'name', sort: true },
-  { label: 'Author', field: 'created_by', sort: true }
+  { label: 'Author', field: 'created_by', sort: true },
+  { label: 'Train score', field: 'train_score', sort: true},
+  { label: 'Val score', field: 'val_score', sort: true}
 ]
 const modelTableLoading = ref(false)
 
@@ -28,7 +30,7 @@ const modelTableData = { columns: modelTableColumns,
     } }) || [] }
 
 const goToModelDetail = async (tableRowIndex: number) => {
-    if (props.dataset?.models) await router.push({ name: 'modelDetail', params: { id: props.dataset.models[tableRowIndex].id } })
+    if (props.dataset?.models) await router.push({ name: 'modelDetail', params: { id: props.dataset.models[tableRowIndex].id }, force: true })
 }
 
 </script>

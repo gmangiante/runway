@@ -15,6 +15,7 @@ from io import StringIO
 from flask_sse import sse
 from multiprocessing import Process
 import time
+from datetime import datetime
 
 models_api = Blueprint('models_api', __name__)
 
@@ -36,6 +37,9 @@ def get_model_detail(id):
 def create_model():
     model_dict = loads(request.data)
     model_dict.pop("id", None)
+    model_dict.pop("fit_at", None)
+    model_dict.pop("created_at", None)
+    model_dict.pop("updated_at", None)
     datafiles = model_dict.pop("datafiles", None)
     model = Model(**model_dict)
     model_class = globals()[model_dict['class_name']]
@@ -124,7 +128,8 @@ def run_fit(model_id, name, created_by, model, X_train, y_train, X_val, y_val):
     model_data = app_db.session.get(Model, model_id)
     model_data.train_score = train_score
     model_data.val_score = val_score
+    model_data.fit_at = datetime.now()
     app_db.session.commit()
     time.sleep(3)
-    sse.publish({'model_id': model_id, 'name': name, 'created_by': created_by,  'train_score': train_score,
+    sse.publish({'model_id': model_id, 'name': name, 'created_by': created_by, 'fit_at': model_data.fit_at,  'train_score': train_score,
         'val_score': val_score}, type = "complete", channel = "model_fit")

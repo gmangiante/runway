@@ -24,6 +24,7 @@ class Model(ModelBase):
     target_name = Column(String, nullable = False)
     feature_names = Column(ARRAY(String), nullable = False)
     saved_model = Column(PickleType, nullable = False)
+    fit_at = Column(DateTime(timezone = True))
     fit_time_ms = Column(Integer, nullable = False, default = 0)
     train_score = Column(Float, nullable = False, default = 0)
     val_score = Column(Float, nullable = False, default = 0)
@@ -43,6 +44,7 @@ class Model(ModelBase):
             "params": dumps(self.params),
             "target_name": self.target_name,
             "feature_names": self.feature_names,
+            "fit_at": str(self.fit_at),
             "train_score": self.train_score,
             "val_score": self.val_score,
             "created_by": self.created_by,

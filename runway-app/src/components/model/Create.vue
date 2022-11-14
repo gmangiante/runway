@@ -20,7 +20,7 @@ const { user } = $(useAuth0())
 
 const { data } = $(await useFetch<Dataset>(`http://localhost:5000/api/datasets/${props.dataset_id}`))
 const analysisFetch = $(await useFetch<DatasetAnalysis>(`http://localhost:5000/api/datasets/analyze/${props.dataset_id}`))
-const newModel = reactive(new Model(-1, -1, '', false, '', {}, '', [], 0, 0, user.email || 'error', new Date(), new Date(), []))
+const newModel = reactive(new Model(-1, -1, '', false, '', {}, '', [], new Date(), 0, 0, user.email || 'error', new Date(), new Date(), []))
 
 const modelTypeOptions = ref([
     { text: "Linear Regression", value: "LinearRegression" },

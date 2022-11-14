@@ -12,6 +12,7 @@ const evtSource = new EventSource("//localhost:5000/events?channel=model_fit", {
 evtSource.addEventListener("complete", (event) => {
     const event_json = JSON.parse(event.data)
     if (props.model && event_json['model_id'] == props.model.id) {
+      props.model.fit_at = event_json['fit_at']
       props.model.train_score = event_json['train_score']
       props.model.val_score = event_json['val_score']
     }
@@ -24,6 +25,10 @@ evtSource.addEventListener("complete", (event) => {
         <tr>
             <th scope="row"><strong>Name</strong></th>
             <td>{{ model?.name }}</td>
+        </tr>
+        <tr>
+            <th scope="row"><strong>Type</strong></th>
+            <td>{{ model?.class_name }}</td>
         </tr>
         <tr>
             <th scope="row"><strong>Author</strong></th>
@@ -42,8 +47,20 @@ evtSource.addEventListener("complete", (event) => {
             <td>{{ model?.is_public ? "Public" : "Private" }}</td>
         </tr>
         <tr>
+            <th scope="row"><strong>Target</strong></th>
+            <td>{{ model?.target_name }}</td>
+        </tr>
+        <tr>
+            <th scope="row"><strong>Features</strong></th>
+            <td>{{ model?.feature_names}}</td>
+        </tr>
+        <tr>
             <th scope="row"><strong>Parameters</strong></th>
             <td>{{ model?.params }}</td>
+        </tr>
+        <tr>
+            <th scope="row"><strong>Fit at</strong></th>
+            <td>{{ model ? new Date(model.fit_at).toLocaleString() : 'Not trained' }}</td>
         </tr>
         <tr>
             <th scope="row"><strong>Train score</strong></th>

@@ -24,7 +24,7 @@ const tableData = { columns: tableColumns,
     } }) || [] }
 
 const goToDetail = async (tableRowIndex: number) => {
-  if (data) await router.push({ name: 'datasetDetail', params: { id: data[tableRowIndex].id } })
+  if (data) await router.push({ name: 'datasetDetail', params: { id: data[tableRowIndex].id }, force: true })
 }
 
 </script>
