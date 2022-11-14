@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import { ref, computed } from 'vue'
+import { ref, computed, getCurrentInstance } from 'vue'
 import { useFetch } from '@/composables/fetch'
-import router from '@/router'
 import type { DatafileAnalysis } from '@/models/DatasetAnalysis'
 import { MDBSelect, MDBDatatable, MDBSwitch, MDBBtn } from 'mdb-vue-ui-kit'
 
@@ -44,9 +43,7 @@ const doDrop = async () => {
     const dropFetch = await useFetch<{success: Boolean, datafile_id: number}>
         (`http://localhost:5000/api/datasets/datafiles/${props.datafile_id}/transform/dropnulls`, 
         { method: 'POST', body: JSON.stringify(dropData) })
-    if (!dropFetch.hasError) {
-        await router.push({name: "datasets", params: { id: props.dataset_id }, force: true, replace: true})
-    }
+
 }
 
 </script>
