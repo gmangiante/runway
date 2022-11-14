@@ -82,7 +82,9 @@ const submitForm = async (e: Event) => {
       <TargetFeatureChooser :analysis="analysisFetch.data || undefined" v-if="rolesSelected" @target-selected="handleTargetSelected" @features-selected="handleFeaturesSelected" />
       <span v-if="readyToSubmit"><strong>Model Parameters</strong></span>
       <LinearRegressionParams v-if="newModel.class_name === 'LinearRegression' && readyToSubmit" @params-changed="handleParamsChanged" />
+      <div>
       <MDBBtn color="primary" type="submit" :class="{ disabled: !readyToSubmit }">Create model</MDBBtn>
       <RouterLink to="/datasets"><MDBBtn color="secondary">Cancel</MDBBtn></RouterLink>
+    </div>
     </MDBRow>
 </template>

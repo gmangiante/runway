@@ -12,7 +12,7 @@ const props = defineProps({
     dataset: Object as PropType<Dataset>
 })
 
-const { user } = $(useAuth0())
+const { user, isAuthenticated } = $(useAuth0())
 const isOwner = ref(user?.email && (user.email === props.dataset?.created_by))
 
 const deleteDataset = async () => {
@@ -25,7 +25,7 @@ const deleteDataset = async () => {
 </script>
 
 <template>
-    <RouterLink :to="'/models/create/' + dataset?.id">
+    <RouterLink :to="'/models/create/' + dataset?.id" v-if="isAuthenticated">
         <MDBBtn color="primary" class="ms-4 mt-4">Create Model</MDBBtn>
     </RouterLink>
     <MDBBtn v-if="isOwner" color="danger" @click="deleteDataset()">Delete dataset</MDBBtn>

@@ -40,10 +40,10 @@ const tableLoading = ref(false)
                     <MDBChart id="nullChart" type="bar" :data="chartData" />
                 </template>
                 <template v-else>
-                    <MDBDatatable :dataset="tableData" :loading="tableLoading" />
+                    <MDBDatatable :dataset="tableData" :loading="tableLoading" max-width="500" />
                 </template>]
             </div>
         </template>
-        <MDBSwitch :label="viewCharts ? 'View as charts' : 'View as tables'" v-model="viewCharts" class="ms-auto" /> 
+        <MDBSwitch :label="viewCharts ? 'View as charts' : 'View as tables'" v-model="viewCharts" /> 
     </div>
 </template>

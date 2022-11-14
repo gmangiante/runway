@@ -60,7 +60,7 @@ evtSource.addEventListener("complete", (event) => {
         </tr>
         <tr>
             <th scope="row"><strong>Fit at</strong></th>
-            <td>{{ model ? new Date(model.fit_at).toLocaleString() : 'Not trained' }}</td>
+            <td>{{ model?.fit_at && model.fit_at.toString() != 'None' ? new Date(model.fit_at).toLocaleString() : 'Not trained' }}</td>
         </tr>
         <tr>
             <th scope="row"><strong>Train score</strong></th>
