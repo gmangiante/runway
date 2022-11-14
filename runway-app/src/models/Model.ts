@@ -1,6 +1,7 @@
 export class Model {
     id: number
     dataset_id: number
+    dataset_name: string
     name: string
     is_public: boolean
     class_name: string
@@ -15,12 +16,13 @@ export class Model {
     updated_at: Date
     datafiles: ModelDatafileAssociation[]
 
-    constructor(id: number, dataset_id: number, name: string, is_public: boolean,
+    constructor(id: number, dataset_id: number, dataset_name: string, name: string, is_public: boolean,
         class_name: string, params: ModelParams, target_name: string, feature_names: string[],
         fit_at: Date, train_score: number, val_score: number,
         created_by: string, created_at: Date, updated_at: Date, datafiles: ModelDatafileAssociation[]) {
         this.id = id
         this.dataset_id = dataset_id
+        this.dataset_name = dataset_name
         this.name = name
         this.is_public = is_public
         this.class_name = class_name

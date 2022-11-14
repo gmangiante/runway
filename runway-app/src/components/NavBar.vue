@@ -70,7 +70,7 @@ const doShowHideUnreads = () => {
           <MDBToast
             v-model="toastVals.show"
             id="fitCompleteToast"
-            position="top-right"
+            position="bottom-right"
             width="350px"
             toast="primary"
             :autohide="true" stacking appendToBody :delay="2000">

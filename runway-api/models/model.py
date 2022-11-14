@@ -38,8 +38,10 @@ class Model(ModelBase):
         return {
             "id": self.id,
             "dataset_id": self.dataset_id,
+            "dataset_name": self.dataset.name,
             "name": self.name,
             "is_public": self.is_public,
+            "datafiles": [{'datafile_id': file.datafile_id, 'role': file.role} for file in self.datafiles],
             "class_name": self.class_name,
             "params": dumps(self.params),
             "target_name": self.target_name,

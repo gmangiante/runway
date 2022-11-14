@@ -11,6 +11,7 @@ import { MDBBreadcrumb, MDBBreadcrumbItem, MDBRow, MDBSelect, MDBInput, MDBBtn, 
 import FileRoleChooser from '@/components/model/FileRoleChooser.vue'
 import TargetFeatureChooser from '@/components/model/TargetFeatureChooser.vue'
 import LinearRegressionParams from '@/components/model/linearRegression/Params.vue'
+import LogisticRegressionParams from '@/components/model/logisticRegression/Params.vue'
 
 const props = defineProps({
     dataset_id: String
@@ -20,7 +21,7 @@ const { user } = $(useAuth0())
 
 const { data } = $(await useFetch<Dataset>(`http://localhost:5000/api/datasets/${props.dataset_id}`))
 const analysisFetch = $(await useFetch<DatasetAnalysis>(`http://localhost:5000/api/datasets/analyze/${props.dataset_id}`))
-const newModel = reactive(new Model(-1, -1, '', false, '', {}, '', [], new Date(), 0, 0, user.email || 'error', new Date(), new Date(), []))
+const newModel = reactive(new Model(-1, -1, '', '', false, '', {}, '', [], new Date(), 0, 0, user.email || 'error', new Date(), new Date(), []))
 
 const modelTypeOptions = ref([
     { text: "Linear Regression", value: "LinearRegression" },
@@ -82,6 +83,7 @@ const submitForm = async (e: Event) => {
       <TargetFeatureChooser :analysis="analysisFetch.data || undefined" v-if="rolesSelected" @target-selected="handleTargetSelected" @features-selected="handleFeaturesSelected" />
       <span v-if="readyToSubmit"><strong>Model Parameters</strong></span>
       <LinearRegressionParams v-if="newModel.class_name === 'LinearRegression' && readyToSubmit" @params-changed="handleParamsChanged" />
+      <LogisticRegressionParams v-if="newModel.class_name === 'LogisticRegression' && readyToSubmit" @params-changed="handleParamsChanged" />
       <div>
       <MDBBtn color="primary" type="submit" :class="{ disabled: !readyToSubmit }">Create model</MDBBtn>
       <RouterLink to="/datasets"><MDBBtn color="secondary">Cancel</MDBBtn></RouterLink>

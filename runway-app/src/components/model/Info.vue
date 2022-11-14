@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import type { PropType } from 'vue'
+import { $ } from 'vue/macros'
 import type { Model } from '@/models/Model'
 import { MDBTable } from 'mdb-vue-ui-kit'
+import { useFetch } from '@/composables/fetch'
+import type { Dataset } from '@/models/Dataset'
 
 const props = defineProps({
     model: Object as PropType<Model>
@@ -25,6 +28,10 @@ evtSource.addEventListener("complete", (event) => {
         <tr>
             <th scope="row"><strong>Name</strong></th>
             <td>{{ model?.name }}</td>
+        </tr>
+        <tr>
+            <th scope="row"><strong>Dataset</strong></th>
+            <td class="d-flex"><RouterLink :to="'/datasets/' + model?.dataset_id" class="p-0">{{ model?.dataset_name }}</RouterLink></td>
         </tr>
         <tr>
             <th scope="row"><strong>Type</strong></th>

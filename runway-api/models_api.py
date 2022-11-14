@@ -5,7 +5,7 @@ from auth_api import requires_auth
 from json import loads, dumps
 from models.model import Model
 from sqlalchemy import or_
-from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import LinearRegression, LogisticRegression
 from sklearn.model_selection import train_test_split
 import pickle
 from models.model import ModelDatafileAssociation
@@ -37,13 +37,20 @@ def get_model_detail(id):
 def create_model():
     model_dict = loads(request.data)
     model_dict.pop("id", None)
+    model_dict.pop("dataset_name", None)
     model_dict.pop("fit_at", None)
     model_dict.pop("created_at", None)
     model_dict.pop("updated_at", None)
+    model_dict['train_score'] = 0
+    model_dict['val_score'] = 0
     datafiles = model_dict.pop("datafiles", None)
     model = Model(**model_dict)
     model_class = globals()[model_dict['class_name']]
-    model_instance = model_class(**model_dict['params'])
+    if type(model_dict['params']) == str:
+        params = loads(model_dict['params'])
+    else:
+        params = model_dict['params']
+    model_instance = model_class(**params)
     model.params = model_instance.get_params()
     model.saved_model = pickle.dumps(model_instance)
     for file in datafiles:
