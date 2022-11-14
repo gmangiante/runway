@@ -59,6 +59,8 @@ def analyze_dataset(id):
             df = pd.read_csv(StringIO(file.content.decode()))
             file_analysis['nulls'] = df.isnull().sum().to_dict()
             file_analysis['columns'] = [{ 'name': name, 'dtype': str(dtype) } for name, dtype in df.dtypes.items()]
+            corr = df.corr()
+            file_analysis['corr'] = [{ 'column1': col, 'column2': othercol, 'corr_val': corr.loc[col, othercol] } for col in corr.index for othercol in corr.index]
         analysis[file.name] = file_analysis
     return dumps(analysis), 200, {'Content-Type':'application/json'}
 

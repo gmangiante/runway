@@ -8,6 +8,7 @@ import { MDBSelect,
     MDBDropdown, MDBDropdownItem, MDBDropdownMenu, MDBDropdownToggle } from 'mdb-vue-ui-kit'
 import DataTypesAnalysis from '@/components/dataset/analysis/DataTypes.vue'
 import NullsAnalysis from '@/components/dataset/analysis/Nulls.vue'
+import CorrelationAnalysis from '@/components/dataset/analysis/Correlation.vue'
 
 const props = defineProps({
     dataset: Object as PropType<Dataset>
@@ -28,7 +29,8 @@ const analyze = async () => {
 
 const analysisOptions = [
     { text: 'Data types', value: 'datatypes' },
-    { text: 'Nulls', value: 'nulls' }
+    { text: 'Nulls', value: 'nulls' },
+    { text: 'Correlation', value: 'correlation' }
 ]
 const selectedAnalysis = ref('datatypes')
 
@@ -45,8 +47,9 @@ const selectedAnalysis = ref('datatypes')
                 </MDBDropdownMenu>
         </MDBDropdown>
         <span v-if="selectedFile == ''" class="ms-4">Choose file above</span>
-        <MDBSelect v-if="selectedFile !== ''" v-model:options="analysisOptions" v-model:selected="selectedAnalysis" />
+        <MDBSelect v-if="selectedFile !== ''" v-model:options="analysisOptions" v-model:selected="selectedAnalysis" style="max-width: 400px" />
         <DataTypesAnalysis v-if="selectedFile !== '' && selectedAnalysis === 'datatypes'" :analysis="analysis[selectedFile]" />
         <NullsAnalysis v-if="selectedFile !== '' && selectedAnalysis === 'nulls'" :analysis="analysis[selectedFile]" />
+        <CorrelationAnalysis v-if="selectedFile !== '' && selectedAnalysis === 'correlation'" :analysis="analysis[selectedFile]" />
     </div>
 </template>
