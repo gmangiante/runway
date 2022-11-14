@@ -15,7 +15,7 @@ const { user } = $(useAuth0())
 const { data } = $(await useFetch<Model>(`http://localhost:5000/api/models/${props.id}`))
 const isOwner = ref(user?.email === data?.created_by)
 
-async function setPublic(isPublic: boolean) {
+const setPublic = async (isPublic: boolean) => {
     const sharingFetch = await useFetch<{success: boolean}>(`http://localhost:5000/api/models/sharing/${data?.id}/${isPublic}`, { method: 'POST'})
     if (!sharingFetch.hasError.value) {
         if (data) data.is_public = isPublic

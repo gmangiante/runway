@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import type { PropType } from 'vue'
 import { ref } from 'vue'
 import { $ } from 'vue/macros'
@@ -34,10 +35,12 @@ const deleteModel = async () => {
     }
 }
 
+const isTrained = computed(() => props.model && props.model.train_score != 0 && props.model.val_score != 0)
+
 </script>
 
 <template>
-    <MDBBtn color="primary" v-if="isOwner" @click="fitModel()">Fit model</MDBBtn>
+    <MDBBtn color="primary" v-if="isOwner && !isTrained" @click="fitModel()">Fit model</MDBBtn>
     <MDBBtn color="danger" v-if="isOwner" @click="deleteModel()">Delete model</MDBBtn>
     <div v-if="isFitting" class="mt-3">
         <MDBSpinner /> Fitting in progress...

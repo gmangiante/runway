@@ -40,6 +40,7 @@ def create_model():
     model = Model(**model_dict)
     model_class = globals()[model_dict['class_name']]
     model_instance = model_class(**model_dict['params'])
+    model.params = model_instance.get_params()
     model.saved_model = pickle.dumps(model_instance)
     for file in datafiles:
         assoc = ModelDatafileAssociation(role = file['role'])
@@ -118,6 +119,12 @@ def fit_model(id):
 
 def run_fit(model_id, name, created_by, model, X_train, y_train, X_val, y_val):
     model.fit(X_train, y_train)
+    train_score = round(model.score(X_train, y_train), 4)
+    val_score = round(model.score(X_val, y_val), 4)
+    model_data = app_db.session.get(Model, model_id)
+    model_data.train_score = train_score
+    model_data.val_score = val_score
+    app_db.session.commit()
     time.sleep(3)
-    sse.publish({'model_id': model_id, 'name': name, 'created_by': created_by,  'train_score': round(model.score(X_train, y_train), 4),
-        'val_score': round(model.score(X_val, y_val), 4)}, type = "complete", channel = "model_fit")
+    sse.publish({'model_id': model_id, 'name': name, 'created_by': created_by,  'train_score': train_score,
+        'val_score': val_score}, type = "complete", channel = "model_fit")

@@ -7,6 +7,16 @@ const props = defineProps({
     model: Object as PropType<Model>
 })
 
+const evtSource = new EventSource("//localhost:5000/events?channel=model_fit", { withCredentials: true } )
+
+evtSource.addEventListener("complete", (event) => {
+    const event_json = JSON.parse(event.data)
+    if (props.model && event_json['model_id'] == props.model.id) {
+      props.model.train_score = event_json['train_score']
+      props.model.val_score = event_json['val_score']
+    }
+})
+
 </script>
 
 <template>
@@ -30,6 +40,18 @@ const props = defineProps({
         <tr>
             <th scope="row"><strong>Sharing</strong></th>
             <td>{{ model?.is_public ? "Public" : "Private" }}</td>
+        </tr>
+        <tr>
+            <th scope="row"><strong>Parameters</strong></th>
+            <td>{{ model?.params }}</td>
+        </tr>
+        <tr>
+            <th scope="row"><strong>Train score</strong></th>
+            <td>{{ model?.train_score == 0 ? 'Not trained' : model?.train_score }}</td>
+        </tr>
+        <tr>
+            <th scope="row"><strong>Val score</strong></th>
+            <td>{{ model?.val_score == 0 ? 'Not trained' : model?.val_score }}</td>
         </tr>
     </MDBTable>
 </template>
