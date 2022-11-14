@@ -8,6 +8,8 @@ export interface ColumnDescription {
 }
 
 export interface DatafileAnalysis {
+    datafile_id: number,
+    datafile_name: string,
     columns: { [key: string]: ColumnDescription }
     nulls: { [key:string]: number}
 }

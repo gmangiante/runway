@@ -54,13 +54,12 @@ def analyze_dataset(id):
     analysis = { }
     ds = app_db.session.get(Dataset, id)
     for file in ds.files:
-        file_analysis = { }
+        file_analysis = { 'datafile_id': file.id, 'datafile_name': file.name }
         if file.content_type == "text/csv":
             df = pd.read_csv(StringIO(file.content.decode()))
             file_analysis['nulls'] = df.isnull().sum().to_dict()
             file_analysis['columns'] = [{ 'name': name, 'dtype': str(dtype) } for name, dtype in df.dtypes.items()]
         analysis[file.name] = file_analysis
-
     return dumps(analysis), 200, {'Content-Type':'application/json'}
 
 @datasets_api.route("/datafiles/<datafile_id>", methods = ["GET"])
@@ -89,3 +88,23 @@ def delete_file(datafile_id):
     app_db.session.delete(df)
     app_db.session.commit()
     return dumps({'success':True}), 200, {'Content-Type':'application/json'}
+
+@datasets_api.route("/datafiles/<datafile_id>/transform/dropnulls", methods = ["POST"])
+@requires_auth
+def drop_nulls(datafile_id):
+    requestData = loads(request.data)
+    file = app_db.session.get(Datafile, datafile_id)
+    df = pd.read_csv(StringIO(file.content.decode()))
+    df = df.dropna(axis = requestData['axis'], subset = requestData['columns'])
+    new_file_content = StringIO()
+    df.to_csv(new_file_content, index = False)
+    if (requestData['duplicate']):
+        new_file = Datafile(dataset_id = file.dataset_id, name = file.name + '_dropnulls', content_type = "text/csv", content = bytes(new_file_content.getvalue(), 'utf-8'), created_by = file.created_by)
+        app_db.session.add(new_file)
+        app_db.session.commit()
+        return_id = new_file.id
+    else:
+        file.content = bytes(new_file_content.getvalue(), 'utf-8')
+        app_db.session.commit()
+        return_id = datafile_id
+    return dumps({'success':True, 'datafile_id': return_id}), 200, {'Content-Type':'application/json'}

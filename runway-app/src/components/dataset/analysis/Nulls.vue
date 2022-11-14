@@ -41,7 +41,7 @@ const tableLoading = ref(false)
                 </template>
                 <template v-else>
                     <MDBDatatable :dataset="tableData" :loading="tableLoading" max-width="500" />
-                </template>]
+                </template>
             </div>
         </template>
         <MDBSwitch :label="viewCharts ? 'View as charts' : 'View as tables'" v-model="viewCharts" /> 

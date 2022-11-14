@@ -6,17 +6,15 @@ import type { Dataset } from '@/models/Dataset'
 import type { DatasetAnalysis } from '@/models/DatasetAnalysis'
 import { MDBSelect,
     MDBDropdown, MDBDropdownItem, MDBDropdownMenu, MDBDropdownToggle } from 'mdb-vue-ui-kit'
-import DataTypesAnalysis from '@/components/dataset/analysis/DataTypes.vue'
-import NullsAnalysis from '@/components/dataset/analysis/Nulls.vue'
+import DropNulls from '@/components/dataset/transforms/DropNulls.vue'
 
 const props = defineProps({
     dataset: Object as PropType<Dataset>
 })
 const analysis = ref<DatasetAnalysis>({})
-
 const fileDropdown = ref(false)
-const selectedFile = ref('')
-
+const selectedFileName = ref('')
+const selectedFileId = ref(0)
 onMounted(async () => analyze())
 
 const analyze = async () => {
@@ -26,11 +24,15 @@ const analyze = async () => {
     }
 }
 
-const analysisOptions = [
-    { text: 'Data types', value: 'datatypes' },
-    { text: 'Nulls', value: 'nulls' }
+const transformOptions = [
+    { text: 'Drop nulls', value: 'dropnulls' }
 ]
-const selectedAnalysis = ref('datatypes')
+const selectedTransform = ref('dropnulls')
+
+const updateSelectedFile = (datafile_name: string, datafile_id: number) => {
+    selectedFileName.value = datafile_name
+    selectedFileId.value = datafile_id
+}
 
 </script>
 
@@ -38,15 +40,14 @@ const selectedAnalysis = ref('datatypes')
     <div>
         <MDBDropdown v-model="fileDropdown" class="mt-4 mb-4">
             <MDBDropdownToggle @click="fileDropdown = !fileDropdown">
-                <span>{{ selectedFile == '' ? "Choose file" : selectedFile }}</span>
+                <span>{{ selectedFileName == '' ? "Choose file" : selectedFileName }}</span>
             </MDBDropdownToggle>
                 <MDBDropdownMenu>
-                    <MDBDropdownItem v-for="file in props.dataset?.files" tag="button" @click="selectedFile = file.name">{{ file.name }}</MDBDropdownItem>
+                    <MDBDropdownItem v-for="file in props.dataset?.files" tag="button" @click="updateSelectedFile(file.name, file.id)">{{ file.name }}</MDBDropdownItem>
                 </MDBDropdownMenu>
         </MDBDropdown>
-        <span v-if="selectedFile == ''" class="ms-4">Choose file above</span>
-        <MDBSelect v-if="selectedFile !== ''" v-model:options="analysisOptions" v-model:selected="selectedAnalysis" />
-        <DataTypesAnalysis v-if="selectedFile !== '' && selectedAnalysis === 'datatypes'" :analysis="analysis[selectedFile]" />
-        <NullsAnalysis v-if="selectedFile !== '' && selectedAnalysis === 'nulls'" :analysis="analysis[selectedFile]" />
+        <span v-if="selectedFileName == ''" class="ms-4">Choose file above</span>
+        <MDBSelect v-if="selectedFileName !== ''" v-model:options="transformOptions" v-model:selected="selectedTransform" />
+        <DropNulls v-if="selectedFileName !== '' && selectedTransform === 'dropnulls'" :dataset_id="dataset?.id" :datafile_id="selectedFileId" :analysis="analysis[selectedFileName]" />
     </div>
 </template>
