@@ -37,7 +37,6 @@ const modelTypeOptions = ref([
 ]);
 
 const handleRolesChanged = (args: { roles: { datafile_id: number, role: string }[], selected: boolean} ) => {
-  console.log(args.roles)
   const trainFile_id = args.roles.find(r => r.role == 'train' || r.role == 'trainAndValidation')?.datafile_id
   trainFile.value = data?.files?.find(f => f.id == trainFile_id)
   const valFile_id = args.roles.find(r => r.role == 'validation' || r.role == 'trainAndValidation')?.datafile_id
@@ -73,7 +72,6 @@ const submitForm = async (e: Event) => {
       newModel.dataset_id = Number.parseInt(props.dataset_id || '-1')
       newModel.datafiles = data?.files?.filter(f => f.role && (f.role !== 'none')).map(f => new ModelDatafileAssociation(f.id, f.role!)) || []
     }
-    console.log(newModel)
     const newModelFetch =
         await useFetch<{ new_model_id: number }>('https://runway-demo.herokuapp.com/api/models/', { method: 'POST', body: JSON.stringify(newModel) })
     if (!newModelFetch.hasError.value && newModelFetch.data.value) {

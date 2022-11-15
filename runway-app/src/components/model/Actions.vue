@@ -22,9 +22,7 @@ const fitModel = async () => {
     isFitting.value = true
     const fitFetch = await useFetch<{success: Boolean}>(`https://runway-demo.herokuapp.com/api/models/fit/${props.model?.id}`, 
         { method: 'POST' })
-    if (fitFetch.data.value?.success) {
-        console.log(fitFetch.data.value)
-    }
+
     isFitting.value = false
 }
 

@@ -27,7 +27,7 @@ const roleOptions = computed(() =>
         ])
 : [])
 
-const rolesSelected = computed(() => { console.log(props.dataset?.files); return (props.dataset?.files?.some(f => f.role == "trainAndValidation"))
+const rolesSelected = computed(() => { return (props.dataset?.files?.some(f => f.role == "trainAndValidation"))
     || (props.dataset?.files?.some(f => f.role == "train") && props.dataset?.files?.some(f => f.role == "validation"))}
 )
 
