@@ -11,7 +11,7 @@ function setActive() {
 	clearTimeout(inActiveTimeout)
 }
 function setInactive() {
-	inActiveTimeout = setTimeout(() => {
+	inActiveTimeout = window.setTimeout(() => {
 		active.value = false
 	}, 50)
 }
