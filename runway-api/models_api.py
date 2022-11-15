@@ -158,7 +158,9 @@ def fit_model(id):
             df = pd.read_csv(StringIO(train_file.content.decode()))
         X = df[model.feature_names]
         y = df[model.target_name]
-        X_train, X_val, y_train, y_val = train_test_split(X, y)
+        # if it's a classifier, we should stratify!
+        stratify = y if model.class_name in ['LogisticRegression', 'GradientBoostingClassifier'] else None
+        X_train, X_val, y_train, y_val = train_test_split(X, y, stratify = stratify)
     else:
         if train_file.content_type == "text/csv":
             df = pd.read_csv(StringIO(train_file.content.decode()))
