@@ -188,7 +188,7 @@ def save_file_for_xform(datafile, dataframe, xform, duplicate):
     new_file_content = StringIO()
     dataframe.to_csv(new_file_content, index = False)
     if (duplicate):
-        new_file = Datafile(dataset_id = datafile.dataset_id, name = datafile.name + f'_{xform}', content_type = "text/csv", content = bytes(new_file_content.getvalue(), 'utf-8'), created_by = datafile.created_by)
+        new_file = Datafile(dataset_id = datafile.dataset_id, name = datafile.name + f'_{xform}.csv', content_type = "text/csv", content = bytes(new_file_content.getvalue(), 'utf-8'), created_by = datafile.created_by)
         app_db.session.add(new_file)
         app_db.session.commit()
         return_id = new_file.id
