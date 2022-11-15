@@ -13,7 +13,7 @@ from flask_cors import CORS
 
 app = Flask(__name__)
 app.config["SESSION_PERMANENT"] = True
-app.config["SESSION_TYPE"] = "filesystem"
+app.config["SESSION_TYPE"] = "redis"
 app.config["REDIS_URL"] = env.get("REDIS_URL", "redis://localhost")
 CORS(app, supports_credentials = True, expose_headers=["Content-Type", "Authorization"],
     origins=['*'])
