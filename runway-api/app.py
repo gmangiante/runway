@@ -20,16 +20,18 @@ CORS(app, supports_credentials = True, expose_headers=["Content-Type", "Authoriz
 
 Session(app)
 
-ENV_FILE = find_dotenv()
-if ENV_FILE:
-    load_dotenv(ENV_FILE)
-DB_DRIVER = env.get("DB_DRIVER")
-DB_SERVER = env.get("DB_SERVER")
-DB_PORT = env.get("DB_PORT")
-DB_NAME = env.get("DB_NAME")
-DB_USER = env.get("DB_USER")
-DB_PASS = env.get("DB_PASS")
-DB_URI = env.get("DATABASE_URL", f"{DB_DRIVER}://{DB_USER}:{DB_PASS}@{DB_SERVER}:{DB_PORT}/{DB_NAME}")
+DB_URI = env.get("DATABASE_URL", "")
+if DB_URI == "":
+    ENV_FILE = find_dotenv()
+    if ENV_FILE:
+        load_dotenv(ENV_FILE)
+    DB_DRIVER = env.get("DB_DRIVER")
+    DB_SERVER = env.get("DB_SERVER")
+    DB_PORT = env.get("DB_PORT")
+    DB_NAME = env.get("DB_NAME")
+    DB_USER = env.get("DB_USER")
+    DB_PASS = env.get("DB_PASS")
+    DB_URI = f"{DB_DRIVER}://{DB_USER}:{DB_PASS}@{DB_SERVER}:{DB_PORT}/{DB_NAME}"
 
 print(f"Checking/creating database {DB_URI}")
 engine = create_engine(DB_URI, echo = env.get("FLASK_DEBUG") == "1")
