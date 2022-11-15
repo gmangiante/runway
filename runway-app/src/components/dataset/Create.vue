@@ -21,11 +21,11 @@ const onInputChange = (e: any) => {
 
 const submitForm = async (e: Event) => {
     e.preventDefault()
-    const { hasError, data } = await useFetch<{ new_dataset_id: number }>('http://localhost:5000/api/datasets/',
+    const { hasError, data } = await useFetch<{ new_dataset_id: number }>('http://runway-demo.herokuapp.com/api/datasets/',
         { method: 'POST', body: JSON.stringify(newDataset) })
     if (!hasError.value && data.value) {
         const id = data.value['new_dataset_id']
-        await uploadFiles(`http://localhost:5000/api/datasets/datafiles/${user.email}/${id}`)
+        await uploadFiles(`http://runway-demo.herokuapp.com/api/datasets/datafiles/${user.email}/${id}`)
         await router.push({ name: 'datasetDetail', params: { id: id }, replace: true, force: true })
     }
 }

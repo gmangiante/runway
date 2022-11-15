@@ -20,7 +20,7 @@ const selectedFileId = ref(0)
 onMounted(async () => analyze())
 
 const analyze = async () => {
-    const analysisFetch = await useFetch<DatasetAnalysis>(`http://localhost:5000/api/datasets/analyze/${props.dataset?.id}`)
+    const analysisFetch = await useFetch<DatasetAnalysis>(`http://runway-demo.herokuapp.com/api/datasets/analyze/${props.dataset?.id}`)
     if (!analysisFetch.hasError.value) {
         analysis.value = analysisFetch.data.value || {}
     }

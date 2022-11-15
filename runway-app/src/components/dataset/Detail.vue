@@ -15,14 +15,14 @@ import DatasetTransform from '@/components/dataset/Transform.vue'
 const props = defineProps({
     id: String
 })
-const { data } = $(await useFetch<Dataset>(`http://localhost:5000/api/datasets/${props.id}`))
+const { data } = $(await useFetch<Dataset>(`http://runway-demo.herokuapp.com/api/datasets/${props.id}`))
 const activeTab = ref('info')
 const { user, isAuthenticated } = $(useAuth0())
 const isOwner = ref(user?.email && (user.email === data?.created_by))
 
 const setPublic = async (isPublic: boolean) => {
     const sharingFetch = await useFetch<{ success: boolean}>(
-        `http://localhost:5000/api/datasets/sharing/${data?.id}/${isPublic}`, { method: 'POST'})
+        `http://runway-demo.herokuapp.com/api/datasets/sharing/${data?.id}/${isPublic}`, { method: 'POST'})
     if (!sharingFetch.hasError.value) {
         if (data) data.is_public = isPublic
     }

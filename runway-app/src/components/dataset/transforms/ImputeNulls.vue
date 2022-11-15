@@ -43,7 +43,7 @@ const duplicate = ref(true)
 const doImpute = async () => {
     const imputeData = { duplicate: duplicate.value, impute: selectedImputeOption.value, columns: selectedColumns.value }
     const imputeFetch = await useFetch<{success: Boolean, datafile_id: number}>
-        (`http://localhost:5000/api/datasets/datafiles/${props.datafile_id}/transform/imputenulls`, 
+        (`http://runway-demo.herokuapp.com/api/datasets/datafiles/${props.datafile_id}/transform/imputenulls`, 
         { method: 'POST', body: JSON.stringify(imputeData) })
 
 }

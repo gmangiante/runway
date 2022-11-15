@@ -35,7 +35,7 @@ const duplicate = ref(true)
 const doEncode = async () => {
     const encodeData = { duplicate: duplicate.value, dropFirst: dropFirst.value, columns: selectedColumns.value }
     const encodeFetch = await useFetch<{success: Boolean, datafile_id: number}>
-        (`http://localhost:5000/api/datasets/datafiles/${props.datafile_id}/transform/onehotencode`, 
+        (`http://runway-demo.herokuapp.com/api/datasets/datafiles/${props.datafile_id}/transform/onehotencode`, 
         { method: 'POST', body: JSON.stringify(encodeData) })
 
 }
