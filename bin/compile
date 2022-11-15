@@ -1,29 +1,32 @@
 #!/usr/bin/env bash
-# bin/compile <build-dir> <cache-dir> <env-dir>
 
-# used for inline heroku buildpack
+# Ensure wildcards in globs match dotfiles too.
+shopt -s dotglob
 
-BUILD_DIR=${1:-}
-CACHE_DIR=${2:-}
-ENV_DIR=${3:-}
+indent() {
+    sed -u 's/^/      /'
+}
 
-PROJECT_PATH=./runway-app
+BUILD_DIR="$1"
+CACHE_DIR="$2"
+ENV_DIR="$3"
+STAGE="$(mktemp -d)"
 
-echo "-----> My Subdir buildpack: path is $PROJECT_PATH"
-echo "       creating cache: $CACHE_DIR"
-mkdir -p $CACHE_DIR
-TMP_DIR=`mktemp -d $CACHE_DIR/subdirXXXXX`
-echo "       created tmp dir: $TMP_DIR"
+if [ ! -f "${ENV_DIR}/APP_BASE" ]; then
+    echo "APP_BASE was not set. Aborting" | indent
+    exit 1
+fi
+APP_BASE="$(cat "${ENV_DIR}/APP_BASE")"
 
-echo "       moving working dir: $PROJECT_PATH to $TMP_DIR"
-cp -R $BUILD_DIR/$PROJECT_PATH/. $TMP_DIR/
+(
+    mv "${BUILD_DIR}/${APP_BASE}" "${STAGE}" &&
+    rm -rf "${BUILD_DIR}"/* &&
+    mv "${STAGE}/$(basename "$APP_BASE")"/* "${BUILD_DIR}"
+)
 
-echo "       cleaning build dir $BUILD_DIR"
-rm -rf $BUILD_DIR
-echo "       recreating $BUILD_DIR"
-mkdir -p $BUILD_DIR
-echo "       copying work dir from cache $TMP_DIR to build dir $BUILD_DIR"
-cp -R $TMP_DIR/. $BUILD_DIR/
-echo "       cleaning tmp dir $TMP_DIR"
-rm -rf $TMP_DIR
-exit 0
+if [ $? -ne 0 ]; then
+    echo "FAILED to copy directory into place" | indent
+    exit 1
+fi
+
+echo "Copied ${APP_BASE} to root of app successfully" | indent
