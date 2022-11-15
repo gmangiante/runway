@@ -71,6 +71,6 @@ const chartOptions = {
         <template v-else>
             <MDBDatatable :dataset="tableData" :loading="tableLoading" :max-width="750" />
         </template>
-        <MDBSwitch v-if="!data || data.length > 0" :label="viewCharts ? 'View as charts' : 'View as tables'" v-model="viewCharts" /> 
+        <MDBSwitch :label="viewCharts ? 'View as charts' : 'View as tables'" v-model="viewCharts" /> 
     </div>
 </template>

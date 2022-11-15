@@ -1,7 +1,7 @@
 <script setup lang="ts">
 // Create dataset component
 // Allows input of name, sharing, notes and then multiple file upload
-import { reactive, ref } from 'vue'
+import { reactive, ref, onMounted } from 'vue'
 import { $ } from 'vue/macros'
 import { useAuth0 } from '@auth0/auth0-vue';
 import { useFetch } from '@/composables/fetch'
@@ -33,6 +33,14 @@ const submitForm = async (e: Event) => {
 }
 
 const activeStep = ref('info')
+
+onMounted(() => {
+    const accButtons = document.getElementsByClassName("accordion-button")
+    for (let i = 0; i < accButtons.length; i++)
+    {
+      (accButtons[i] as any).type = "button"
+    }
+})
 </script>
 
 <template>
@@ -43,7 +51,6 @@ const activeStep = ref('info')
         </MDBBreadcrumb>
     </nav>
     <MDBRow tag="form" class="g-3" @submit="submitForm" style="max-width: 750px">
-        <div onclick="return false">
         <MDBAccordion v-model="activeStep">
             <MDBAccordionItem headerTitle="Dataset info" collapseId="info">
                 <MDBInput label="Dataset name" v-model="newDataset.name" class="mb-3" required />
@@ -67,7 +74,6 @@ const activeStep = ref('info')
             </DropZone>
             </MDBAccordionItem>
         </MDBAccordion>
-        </div>
         <div>
             <MDBBtn color="primary" type="submit">Create dataset</MDBBtn>
             <RouterLink to="/datasets"><MDBBtn color="secondary">Cancel</MDBBtn></RouterLink>

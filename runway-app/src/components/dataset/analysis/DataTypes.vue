@@ -63,6 +63,7 @@ const exportImage = async () => {
             <MDBDatatable :dataset="tableData" :loading="tableLoading" :max-width="750" />
         </template>
         <MDBSwitch :label="viewCharts ? 'View as charts' : 'View as tables'" v-model="viewCharts"  />
-        <MDBBtn @click="exportImage()" class="ms-3">Save</MDBBtn>
+        <!--Save visualizations - future feature!-->
+        <!--<MDBBtn @click="exportImage()" class="ms-3">Save</MDBBtn>-->
     </div>
 </template>

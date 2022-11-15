@@ -15,6 +15,7 @@ import FileRoleChooser from '@/components/model/FileRoleChooser.vue'
 import TargetFeatureChooser from '@/components/model/TargetFeatureChooser.vue'
 import LinearRegressionParams from '@/components/model/linearRegression/Params.vue'
 import LogisticRegressionParams from '@/components/model/logisticRegression/Params.vue'
+import RandomForestRegressorParams from '@/components/model/randomForestRegressor/Params.vue'
 
 const props = defineProps({
     dataset_id: String
@@ -29,7 +30,8 @@ const newModel = reactive(new Model(-1, -1, '', '', false, '', '', {}, '', [], n
 
 const modelTypeOptions = ref([
     { text: "Linear Regression", value: "LinearRegression" },
-    { text: "Logistic Regression", value: "LogisticRegression" }
+    { text: "Logistic Regression", value: "LogisticRegression" },
+    { text: "Random Forest Regressor", value: "RandomForestRegressor" }
 ]);
 
 const handleRolesChanged = (args: { roles: { datafile_id: number, role: string }[], selected: boolean} ) => {
@@ -129,7 +131,8 @@ onMounted(
         <MDBAccordionItem headerTitle="Model parameters" collapseId="modelParams">
           <span v-if="readyToSubmit"><strong>Model Parameters</strong></span>
           <LinearRegressionParams v-if="newModel.class_name === 'LinearRegression' && readyToSubmit" @params-changed="handleParamsChanged" :existing-params="existingParams" />
-          <LogisticRegressionParams v-if="newModel.class_name === 'LogisticRegression' && readyToSubmit" @params-changed="handleParamsChanged" />
+          <LogisticRegressionParams v-if="newModel.class_name === 'LogisticRegression' && readyToSubmit" @params-changed="handleParamsChanged" :existing-params="existingParams" />
+          <RandomForestRegressorParams v-if="newModel.class_name === 'RandomForestRegressor' && readyToSubmit" @params-changed="handleParamsChanged" :existing-params="existingParams" />
         </MDBAccordionItem>
       </MDBAccordion>
       <div>

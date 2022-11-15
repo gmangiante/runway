@@ -18,8 +18,9 @@ const { user } = $(useAuth0())
 const isOwner = ref(user?.email && (user.email === props.dataset?.created_by))
 
 const modelTableColumns = [
-  { label: 'Sharing', field: 'sharing', width: 50, fixed: true, sort: true },
+  { label: 'Sharing', field: 'sharing', width: 100, fixed: true, sort: true },
   { label: 'Name', field: 'name', sort: true },
+  { label: 'Type', field: 'class_name', sort: true },
   { label: 'Author', field: 'created_by', sort: true },
   { label: 'Train score', field: 'train_score', sort: true},
   { label: 'Val score', field: 'val_score', sort: true}
@@ -39,6 +40,6 @@ const goToModelDetail = async (tableRowIndex: number) => {
 </script>
 
 <template>
-    <MDBDatatable :dataset="modelTableData" :maxWidth="750" style="cursor:pointer"
+    <MDBDatatable :dataset="modelTableData" :maxWidth="1000" style="cursor:pointer"
         fixedHeader clickable @row-click="goToModelDetail" :loading="modelTableLoading" />
 </template>

@@ -1,9 +1,13 @@
 <script setup lang="ts">
 // Logistic regression parameters
 // Penalty, solver, C-value, and max iterations were selected subset for now
-import { ref, getCurrentInstance, onMounted } from 'vue'
+import { ref, getCurrentInstance, onMounted, type PropType } from 'vue'
 import type { ModelParams } from '@/models/Model'
 import { MDBSelect, MDBInput } from 'mdb-vue-ui-kit'
+
+const props = defineProps({
+    existingParams: Object as PropType<ModelParams>
+})
 
 defineEmits({
     paramsChanged(args: { newParams: ModelParams }) { return true }
@@ -37,7 +41,11 @@ const handleParamsChanged = () =>
     currentInst?.emit('paramsChanged', { newParams: params.value })
 }
 
-onMounted(() => handleParamsChanged())
+onMounted(() => {
+    if (props.existingParams) Object.assign(params.value, props.existingParams)
+    console.log(params.value)
+    handleParamsChanged()
+})
 
 </script>
 <template>

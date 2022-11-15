@@ -26,9 +26,9 @@ evtSource.addEventListener("complete", (event) => {
 </script>
 
 <template>
-    <MDBTable style="max-width: 750px">
+    <MDBTable style="max-width: 800px">
         <tr>
-            <th scope="row"><strong>Name</strong></th>
+            <th scope="row" class="w-25"><strong>Name</strong></th>
             <td>{{ model?.name }}</td>
         </tr>
         <tr>
@@ -88,7 +88,7 @@ evtSource.addEventListener("complete", (event) => {
             <td>{{ model?.val_score == 0 ? 'Not trained' : model?.other_scores }}</td>
         </tr>
         <tr>
-            <th scope="row"><strong>Other attributes</strong></th>
+            <th scope="row"><strong>Other Attributes</strong></th>
             <td>{{ model?.val_score == 0 ? 'Not trained' : model?.other_attribs }}</td>
         </tr>
     </MDBTable>

@@ -6,6 +6,7 @@ from json import loads, dumps
 from models.model import Model
 from sqlalchemy import or_
 from sklearn.linear_model import LinearRegression, LogisticRegression
+from sklearn.ensemble import RandomForestRegressor
 from sklearn.model_selection import train_test_split
 import pickle
 from models.model import ModelDatafileAssociation
