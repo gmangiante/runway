@@ -39,7 +39,6 @@ const duplicate = ref(true)
 
 const doDrop = async () => {
     const dropData = { duplicate: duplicate.value, axis: selectedDropOption.value, columns: selectedColumns.value }
-    console.log(JSON.stringify(dropData))
     const dropFetch = await useFetch<{success: Boolean, datafile_id: number}>
         (`http://localhost:5000/api/datasets/datafiles/${props.datafile_id}/transform/dropnulls`, 
         { method: 'POST', body: JSON.stringify(dropData) })

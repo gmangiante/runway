@@ -17,7 +17,7 @@ const data = computed(() => props.analysis ?
             .map(x => props.analysis!.nulls[x])
         : [])
 const chartData = computed(() => { return {
-    labels: labels.value, datasets: Array({ label: 'Nulls', data: data.value})} } )
+    labels: labels.value, datasets: Array({ label: '# Rows', data: data.value})} } )
 
 const tableColumns = [
   { label: 'Column', field: 'name', sort: true },
@@ -37,7 +37,7 @@ const tableLoading = ref(false)
         <template v-else>
             <div>
                 <template v-if="viewCharts">
-                    <MDBChart id="nullChart" type="bar" :data="chartData" />
+                    <MDBChart id="nullChart" type="bar" style="max-width: 500px; max-height: 500px" :data="chartData" />
                 </template>
                 <template v-else>
                     <MDBDatatable :dataset="tableData" :loading="tableLoading" :max-width="750" />

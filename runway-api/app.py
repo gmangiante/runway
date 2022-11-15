@@ -68,15 +68,13 @@ if __name__ == "__main__":
 
 @app.before_request
 def before_req_func():
-    if request.method == 'OPTIONS':
-        return
+    if request.method != "OPTIONS":
+        token = request.headers.get("Authorization", None)
+        user = session.get("user", None)
 
-    token = request.headers.get("Authorization", None)
-    user = session.get("user", None)
-
-    if user is None and token is not None:
-        token = token.split()[1]
-        userinfo = urlopen(f"https://{env['AUTH0_DOMAIN']}/userinfo?access_token={token}").read()
-        session["user"] = loads(userinfo)["email"]
-    elif user is not None and token is None:
-        session.pop("user", None)
+        if user is None and token is not None:
+            token = token.split()[1]
+            userinfo = urlopen(f"https://{env['AUTH0_DOMAIN']}/userinfo?access_token={token}").read()
+            session["user"] = loads(userinfo)["email"]
+        elif user is not None and token is None:
+            session.pop("user", None)

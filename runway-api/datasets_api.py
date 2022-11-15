@@ -7,6 +7,8 @@ from auth_api import requires_auth
 from json import loads, dumps
 import pandas as pd
 from io import StringIO
+import base64
+from models.visualizations import DatasetVisualization
 
 datasets_api = Blueprint("datasets_api", __name__)
 
@@ -54,11 +56,13 @@ def analyze_dataset(id):
     analysis = { }
     ds = app_db.session.get(Dataset, id)
     for file in ds.files:
-        file_analysis = { 'datafile_id': file.id, 'datafile_name': file.name }
+        file_analysis = {'dataset_id': id, 'datafile_id': file.id, 'datafile_name': file.name }
         if file.content_type == "text/csv":
             df = pd.read_csv(StringIO(file.content.decode()))
             file_analysis['nulls'] = df.isnull().sum().to_dict()
             file_analysis['columns'] = [{ 'name': name, 'dtype': str(dtype) } for name, dtype in df.dtypes.items()]
+            file_analysis['distributions'] = [ {'column': col, 'distribution': [ {'value': str(val), 'occurrences': occ}
+                for val, occ in df[col].value_counts().items()]} for col in df.columns ]
             corr = df.corr()
             file_analysis['corr'] = [{ 'column1': col, 'column2': othercol, 'corr_val': corr.loc[col, othercol] } for col in corr.index for othercol in corr.index]
         analysis[file.name] = file_analysis
@@ -110,3 +114,14 @@ def drop_nulls(datafile_id):
         app_db.session.commit()
         return_id = datafile_id
     return dumps({'success':True, 'datafile_id': return_id}), 200, {'Content-Type':'application/json'}
+
+@datasets_api.route("/visualizations/<dataset_id>", methods = ["POST"])
+@requires_auth
+def uploadVisualization(dataset_id):
+    imageData64 = request.data[len("data:image/png;base64,"):]
+    imageData = base64.decodebytes(imageData64)
+    viz = DatasetVisualization(dataset_id = dataset_id, name = "test", is_public = True, content_type = "image/png",
+        content = imageData, created_by = "gabrielmangiante@gmail.com" )
+    app_db.session.add(viz)
+    app_db.session.commit()
+    return dumps({'success':True}), 200, {'Content-Type':'application/json'}

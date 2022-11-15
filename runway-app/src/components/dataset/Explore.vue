@@ -9,6 +9,7 @@ import { MDBSelect,
 import DataTypesAnalysis from '@/components/dataset/analysis/DataTypes.vue'
 import NullsAnalysis from '@/components/dataset/analysis/Nulls.vue'
 import CorrelationAnalysis from '@/components/dataset/analysis/Correlation.vue'
+import DistributionAnalysis from '@/components/dataset/analysis/Distribution.vue'
 
 const props = defineProps({
     dataset: Object as PropType<Dataset>
@@ -30,7 +31,8 @@ const analyze = async () => {
 const analysisOptions = [
     { text: 'Data types', value: 'datatypes' },
     { text: 'Nulls', value: 'nulls' },
-    { text: 'Correlation', value: 'correlation' }
+    { text: 'Correlation', value: 'correlation' },
+    { text: 'Distribution', value: 'distribution' }
 ]
 const selectedAnalysis = ref('datatypes')
 
@@ -51,5 +53,6 @@ const selectedAnalysis = ref('datatypes')
         <DataTypesAnalysis v-if="selectedFile !== '' && selectedAnalysis === 'datatypes'" :analysis="analysis[selectedFile]" />
         <NullsAnalysis v-if="selectedFile !== '' && selectedAnalysis === 'nulls'" :analysis="analysis[selectedFile]" />
         <CorrelationAnalysis v-if="selectedFile !== '' && selectedAnalysis === 'correlation'" :analysis="analysis[selectedFile]" />
+        <DistributionAnalysis v-if="selectedFile !== '' && selectedAnalysis === 'distribution'" :analysis="analysis[selectedFile]" />
     </div>
 </template>
