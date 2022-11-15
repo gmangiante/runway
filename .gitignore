@@ -35,3 +35,4 @@ lerna-debug.log*
 test-results/
 playwright-report/
 flask_session/
+README.md
