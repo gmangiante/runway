@@ -24,8 +24,8 @@ const props = defineProps({
 
 const { user } = $(useAuth0())
 
-const { data } = $(await useFetch<Dataset>(`https://runway-demo.herokuapp.com/api/datasets/${props.dataset_id}`))
-const analysisFetch = $(await useFetch<DatasetAnalysis>(`https://runway-demo.herokuapp.com/api/datasets/analyze/${props.dataset_id}`))
+const { data } = $(await useFetch<Dataset>(`http://localhost:5000/api/datasets/${props.dataset_id}`))
+const analysisFetch = $(await useFetch<DatasetAnalysis>(`http://localhost:5000/api/datasets/analyze/${props.dataset_id}`))
 
 const newModel = reactive(new Model(-1, -1, '', '', false, '', '', {}, '', [], new Date(), 0, 0, 0, {}, {}, user.email || 'error', new Date(), new Date(), []))
 
@@ -73,7 +73,7 @@ const submitForm = async (e: Event) => {
       newModel.datafiles = data?.files?.filter(f => f.role && (f.role !== 'none')).map(f => new ModelDatafileAssociation(f.id, f.role!)) || []
     }
     const newModelFetch =
-        await useFetch<{ new_model_id: number }>('https://runway-demo.herokuapp.com/api/models/', { method: 'POST', body: JSON.stringify(newModel) })
+        await useFetch<{ new_model_id: number }>('http://localhost:5000/api/models/', { method: 'POST', body: JSON.stringify(newModel) })
     if (!newModelFetch.hasError.value && newModelFetch.data.value) {
         await router.push({ name: 'modelDetail', params: { id: newModelFetch.data.value['new_model_id'] }, replace: true, force: true })
     }
@@ -87,7 +87,7 @@ onMounted(
     if (router.currentRoute.value.query['dup']) {
       const existing_model_id = router.currentRoute.value.query['dup']
       const existingModelFetch =
-        await useFetch<Model>(`https://runway-demo.herokuapp.com/api/models/${existing_model_id}`)
+        await useFetch<Model>(`http://localhost:5000/api/models/${existing_model_id}`)
       if (!existingModelFetch.hasError.value && existingModelFetch.data.value) {
           Object.assign(newModel, {...existingModelFetch.data.value})
           existingParams.value = JSON.parse(newModel.params.toString())

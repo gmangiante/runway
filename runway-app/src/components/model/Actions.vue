@@ -20,14 +20,14 @@ const isFitting = ref(false)
 
 const fitModel = async () => {
     isFitting.value = true
-    const fitFetch = await useFetch<{success: Boolean}>(`https://runway-demo.herokuapp.com/api/models/fit/${props.model?.id}`, 
+    const fitFetch = await useFetch<{success: Boolean}>(`http://localhost:5000/api/models/fit/${props.model?.id}`, 
         { method: 'POST' })
 
     isFitting.value = false
 }
 
 const deleteModel = async () => {
-    const delFetch = await useFetch<{success: Boolean}>(`https://runway-demo.herokuapp.com/api/models/${props.model?.id}`, 
+    const delFetch = await useFetch<{success: Boolean}>(`http://localhost:5000/api/models/${props.model?.id}`, 
         { method: 'DELETE' })
     if (delFetch.data.value?.success) {
         await router.push({ name: 'modelList', replace: true, force: true})
@@ -43,7 +43,7 @@ const dupModel = async() => {
 const isTrained = computed(() => props.model && props.model.train_score != 0 && props.model.val_score != 0)
 
 const downloadModel = async () => {
-    const modelDownload = await useFetch<Blob>(`https://runway-demo.herokuapp.com/api/models/${props.model?.id}/download`)
+    const modelDownload = await useFetch<Blob>(`http://localhost:5000/api/models/${props.model?.id}/download`)
 
     if (!modelDownload.hasError.value) {
         let link = document.createElement('a')
@@ -60,7 +60,7 @@ const downloadModel = async () => {
 <template>
     <MDBBtn color="primary" v-if="isOwner && !isTrained" @click="fitModel()">Train</MDBBtn>
     <MDBBtn color="primary" v-if="isAuthenticated" @click="dupModel()">Duplicate</MDBBtn>
-    <MDBBtn color="primary" v-if="isAuthenticated" @click="downloadModel()">Download</MDBBtn>
+    <MDBBtn color="primary" v-if="isAuthenticated && isTrained" @click="downloadModel()">Download</MDBBtn>
     <MDBBtn color="danger" v-if="isOwner" @click="deleteModel()">Delete</MDBBtn>
     <div v-if="isFitting" class="mt-3">
         <MDBSpinner /> Fitting in progress...

@@ -17,7 +17,7 @@ const { user, isAuthenticated } = $(useAuth0())
 const isOwner = ref(user?.email && (user.email === props.dataset?.created_by))
 
 const deleteDataset = async () => {
-    const delFetch = await useFetch<{success: Boolean}>(`https://runway-demo.herokuapp.com/api/datasets/${props.dataset?.id}`, 
+    const delFetch = await useFetch<{success: Boolean}>(`http://localhost:5000/api/datasets/${props.dataset?.id}`, 
         { method: 'DELETE' })
     if (delFetch.data.value?.success) {
         await router.push({ name: 'datasetList', replace: true, force: true})

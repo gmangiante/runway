@@ -11,9 +11,9 @@ import router from '@/router'
 import {  MDBBreadcrumb, MDBBreadcrumbItem, MDBDatatable, MDBBtn } from 'mdb-vue-ui-kit'
 
 const { isAuthenticated } = $(useAuth0())
-const { data } = $(await useFetch<Dataset[]>('https://runway-demo.herokuapp.com/api/datasets/'))
+const { data } = $(await useFetch<Dataset[]>('http://localhost:5000/api/datasets/'))
 const tableColumns = [
-  { label: 'Sharing', field: 'sharing', width: 50, fixed: true, sort: true },
+  { label: 'Sharing', field: 'sharing', width: 80, fixed: true, sort: true },
   { label: 'Name', field: 'name', sort: true },
   { label: 'Author', field: 'created_by', sort: true }
 ]

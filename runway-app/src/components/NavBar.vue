@@ -20,11 +20,12 @@ function doLogout() {
 
 
 
-const evtSource = new EventSource(`https://runway-demo.herokuapp.com/events?channel=model_fit`, { withCredentials: true } )
+const evtSource = new EventSource(`http://localhost:5000/events?channel=model_fit`, { withCredentials: true } )
 
 evtSource.addEventListener("complete", (event) => {
     const event_json = JSON.parse(event.data)
     if (event_json['created_by'] == user.email) {
+      toastVals.value.model_id = event_json['model_id']
       toastVals.value.model_name = event_json['name']
       toastVals.value.train_score = event_json['train_score']
       toastVals.value.val_score = event_json['val_score']

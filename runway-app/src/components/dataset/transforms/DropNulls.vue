@@ -43,9 +43,9 @@ const duplicate = ref(true)
 const doDrop = async () => {
     const dropData = { duplicate: duplicate.value, axis: selectedDropOption.value, columns: selectedColumns.value }
     const dropFetch = await useFetch<{success: Boolean, datafile_id: number}>
-        (`https://runway-demo.herokuapp.com/api/datasets/datafiles/${props.datafile_id}/transform/dropnulls`, 
+        (`http://localhost:5000/api/datasets/datafiles/${props.datafile_id}/transform/dropnulls`, 
         { method: 'POST', body: JSON.stringify(dropData) })
-
+    if (!dropFetch.hasError.value) window.location.reload()
 }
 
 </script>

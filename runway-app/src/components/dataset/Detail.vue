@@ -17,14 +17,14 @@ import DatasetTransform from '@/components/dataset/Transform.vue'
 const props = defineProps({
     id: String
 })
-const { data } = $(await useFetch<Dataset>(`https://runway-demo.herokuapp.com/api/datasets/${props.id}`))
+const { data } = $(await useFetch<Dataset>(`http://localhost:5000/api/datasets/${props.id}`))
 const activeTab = ref('info')
 const { user, isAuthenticated } = $(useAuth0())
 const isOwner = ref(user?.email && (user.email === data?.created_by))
 
 const setPublic = async (isPublic: boolean) => {
     const sharingFetch = await useFetch<{ success: boolean}>(
-        `https://runway-demo.herokuapp.com/api/datasets/sharing/${data?.id}/${isPublic}`, { method: 'POST'})
+        `http://localhost:5000/api/datasets/sharing/${data?.id}/${isPublic}`, { method: 'POST'})
     if (!sharingFetch.hasError.value) {
         if (data) data.is_public = isPublic
     }
@@ -57,14 +57,14 @@ const setPublic = async (isPublic: boolean) => {
             <MDBTabNav tabsClasses="mb-3">
                 <MDBTabItem tabId="info" href="info">Info</MDBTabItem>
                 <MDBTabItem tabId="explore" href="explore">Explore</MDBTabItem>
-                <MDBTabItem tabId="transform" href="transform">Transform</MDBTabItem>
+                <MDBTabItem tabId="transform" href="transform" v-if="isOwner">Transform</MDBTabItem>
                 <MDBTabItem tabId="models" href="models">Models</MDBTabItem>
             </MDBTabNav>
             <MDBTabContent>
                 <MDBTabPane tabId="info"><DatasetInfo :dataset="data || undefined" /></MDBTabPane>
                 <MDBTabPane tabId="explore"><DatasetExplore :dataset="data || undefined" /></MDBTabPane>
-                <MDBTabPane tabId="transform" v-if="isOwner"><DatasetTransform :dataset="data || undefined" /></MDBTabPane>
-                <MDBTabPane tabId="models" v-if="isAuthenticated"><DatasetModels :dataset="data || undefined" /></MDBTabPane>
+                <MDBTabPane tabId="transform"><DatasetTransform :dataset="data || undefined" /></MDBTabPane>
+                <MDBTabPane tabId="models"><DatasetModels :dataset="data || undefined" /></MDBTabPane>
             </MDBTabContent>
         </MDBTabs>
         <DatasetActions :dataset="data || undefined" />

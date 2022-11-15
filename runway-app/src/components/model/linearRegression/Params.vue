@@ -33,7 +33,7 @@ onMounted(() => {
 
 </script>
 <template>
-    <MDBCheckbox class="mt-3" v-model="params['fit_intercept']" label="Fit Intercept" @vnode-updated="handleParamsChanged()" />
-    <MDBCheckbox class="mt-3" v-model="params['normalize']" label="Normalize" @vnode-updated="handleParamsChanged()" />
-    <MDBCheckbox class="mt-3" v-model="params['positive']" label="Positive" @vnode-updated="handleParamsChanged()" />
+    <MDBCheckbox v-model="params['fit_intercept']" label="Fit Intercept" @vnode-updated="handleParamsChanged()" />
+    <MDBCheckbox v-model="params['normalize']" label="Normalize" @vnode-updated="handleParamsChanged()" />
+    <MDBCheckbox v-model="params['positive']" label="Positive" @vnode-updated="handleParamsChanged()" />
 </template>

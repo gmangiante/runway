@@ -9,7 +9,7 @@ const props = defineProps({
     model: Object as PropType<Model>
 })
 
-const evtSource = new EventSource("//runway-demo.herokuapp.com/events?channel=model_fit", { withCredentials: true } )
+const evtSource = new EventSource("http://localhost:5000/events?channel=model_fit", { withCredentials: true } )
 
 evtSource.addEventListener("complete", (event) => {
     const event_json = JSON.parse(event.data)
