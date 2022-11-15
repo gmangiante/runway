@@ -52,6 +52,8 @@ learning models. Since it was originally created for the General Assembly Data S
 - Expansion of input formats - as noted above, only CSV is currently supported for data ingestion.
 - Expansion of data exploration/visualization beyond the basics noted here.
 - Expansion of the number and type of machine learning models supported.
+- Streaming data - at this time, only static datasets are supported; however, I would like to explore using streaming data services such as [ably](https://ably.com/) in the future for modeling.
+- Predictions - at this point, only training and evaluation models is supported; an area to explore would be how to best facilitate both model owners and casual browsers using these models for actual predictions.
 
 **CREDITS**
 
