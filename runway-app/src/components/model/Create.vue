@@ -85,6 +85,7 @@ const existingParams: Ref<ModelParams | undefined> = ref()
 const isDup = ref(false)
 onMounted(
   async () => {
+    // if we're duplicating a model, assign all the things
     if (router.currentRoute.value.query['dup']) {
       const existing_model_id = router.currentRoute.value.query['dup']
       const existingModelFetch =
@@ -95,6 +96,7 @@ onMounted(
           isDup.value = true
       }
     }
+    // this is to make the form elements inside the accordion behave
     const accButtons = document.getElementsByClassName("accordion-button")
     for (let i = 0; i < accButtons.length; i++)
     {
