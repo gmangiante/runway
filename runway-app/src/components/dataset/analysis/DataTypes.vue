@@ -40,7 +40,7 @@ const exportImage = async () => {
     imageObject.src = chart.toDataURL("image/png"); 
     // for later - save viz to database
     /*const dropFetch = await useFetch<{success: Boolean}>
-        (`http://runway-demo.herokuapp.com/api/datasets/visualizations/${props.analysis?.dataset_id}`, 
+        (`https://runway-demo.herokuapp.com/api/datasets/visualizations/${props.analysis?.dataset_id}`, 
         { method: 'POST', body: imageObject.src })*/
     // or to download
     const link = document.createElement("a")

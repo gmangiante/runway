@@ -6,7 +6,7 @@ import type { Model } from '@/models/Model'
 import router from '@/router'
 import { MDBDatatable, MDBBreadcrumb, MDBBreadcrumbItem } from 'mdb-vue-ui-kit'
 
-const { data } = $(await useFetch<Model[]>('http://runway-demo.herokuapp.com/api/models/'))
+const { data } = $(await useFetch<Model[]>('https://runway-demo.herokuapp.com/api/models/'))
 const tableColumns = [
   { label: 'Sharing', field: 'sharing', width: 50, fixed: true, sort: true },
   { label: 'Name', field: 'name', sort: true },

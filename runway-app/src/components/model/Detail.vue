@@ -12,11 +12,11 @@ const props = defineProps({
     id: String
 })
 const { user } = $(useAuth0())
-const { data } = $(await useFetch<Model>(`http://runway-demo.herokuapp.com/api/models/${props.id}`))
+const { data } = $(await useFetch<Model>(`https://runway-demo.herokuapp.com/api/models/${props.id}`))
 const isOwner = ref(user?.email === data?.created_by)
 
 const setPublic = async (isPublic: boolean) => {
-    const sharingFetch = await useFetch<{success: boolean}>(`http://runway-demo.herokuapp.com/api/models/sharing/${data?.id}/${isPublic}`, { method: 'POST'})
+    const sharingFetch = await useFetch<{success: boolean}>(`https://runway-demo.herokuapp.com/api/models/sharing/${data?.id}/${isPublic}`, { method: 'POST'})
     if (!sharingFetch.hasError.value) {
         if (data) data.is_public = isPublic
     }

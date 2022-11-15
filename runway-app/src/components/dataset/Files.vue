@@ -15,7 +15,7 @@ const { user } = $(useAuth0())
 const isOwner = ref(user?.email && (user.email === props.dataset?.created_by))
 
 const downloadFile = async (datafile_id: number, datafile_name: string) => {
-    const fileDownload = await useFetch<Blob>(`http://runway-demo.herokuapp.com/api/datasets/datafiles/${datafile_id}`)
+    const fileDownload = await useFetch<Blob>(`https://runway-demo.herokuapp.com/api/datasets/datafiles/${datafile_id}`)
 
     if (!fileDownload.hasError.value) {
         let link = document.createElement('a')
@@ -28,7 +28,7 @@ const downloadFile = async (datafile_id: number, datafile_name: string) => {
 }
 
 const deleteFile = async (datafile_id: number) => {
-    const delFetch = await useFetch<{success: Boolean}>(`http://runway-demo.herokuapp.com/api/datasets/datafiles/${datafile_id}`, 
+    const delFetch = await useFetch<{success: Boolean}>(`https://runway-demo.herokuapp.com/api/datasets/datafiles/${datafile_id}`, 
         { method: 'DELETE' })
     if (delFetch.data.value?.success) {
         props.dataset?.files?.splice(props.dataset?.files?.findIndex(file => file.id === datafile_id), 1)
