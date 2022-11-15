@@ -30,6 +30,7 @@ class Model(ModelBase):
     train_score = Column(Float, nullable = False, default = 0)
     val_score = Column(Float, nullable = False, default = 0)
     other_scores = Column(JSON, nullable = False, default = {})
+    other_attribs = Column(JSON, nullable = False, default = {})
     created_by = Column(String, nullable = False)
     created_at = Column(DateTime(timezone = True), nullable = False, server_default = func.now())
     updated_at = Column(DateTime(timezone = True), nullable = False, server_default = func.now(), onupdate = func.now())
@@ -52,6 +53,8 @@ class Model(ModelBase):
             "fit_time_ms": str(self.fit_time_ms),
             "train_score": self.train_score,
             "val_score": self.val_score,
+            "other_scores": dumps(self.other_scores),
+            "other_attribs": dumps(self.other_attribs),
             "created_by": self.created_by,
             "created_at": str(self.created_at),
             "updated_at": str(self.updated_at)

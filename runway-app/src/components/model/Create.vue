@@ -23,7 +23,7 @@ const { user } = $(useAuth0())
 const { data } = $(await useFetch<Dataset>(`http://localhost:5000/api/datasets/${props.dataset_id}`))
 const analysisFetch = $(await useFetch<DatasetAnalysis>(`http://localhost:5000/api/datasets/analyze/${props.dataset_id}`))
 
-const newModel = reactive(new Model(-1, -1, '', '', false, '', '', {}, '', [], new Date(), 0, 0, 0, user.email || 'error', new Date(), new Date(), []))
+const newModel = reactive(new Model(-1, -1, '', '', false, '', '', {}, '', [], new Date(), 0, 0, 0, {}, {}, user.email || 'error', new Date(), new Date(), []))
 
 const modelTypeOptions = ref([
     { text: "Linear Regression", value: "LinearRegression" },
@@ -112,9 +112,11 @@ onMounted(
           <span><strong>Dataset name:</strong> {{ data?.name }}</span>
           <MDBInput label="Model name" v-model="newModel.name" class="mb-3 mt-3" required />
           <MDBSwitch v-if="rolesSelected && (newModel.target_name !== '')" :label="newModel.is_public ? 'Public' : 'Private'" v-model="newModel.is_public" />
+          <MDBTextarea label="Notes" rows="5" v-model="newModel.notes" class="mt-3" />
+        </MDBAccordionItem>
+        <MDBAccordionItem headerTitle="Model type" collapseId="modeltype" v-if="!isDup">
           <span><strong>Model type</strong></span>
           <MDBSelect v-model:options="modelTypeOptions" v-model:selected="newModel.class_name" />
-          <MDBTextarea label="Notes" rows="5" v-model="newModel.notes" class="mt-3" />
         </MDBAccordionItem>
         <MDBAccordionItem headerTitle="Data" collapseId="data" v-if="!isDup">
           <FileRoleChooser :dataset="data || undefined" @roles-changed="handleRolesChanged" />

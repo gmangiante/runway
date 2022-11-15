@@ -39,8 +39,8 @@ onMounted(() => handleParamsChanged())
 
 </script>
 <template>
-    <MDBSelect v-model:options="penaltyOptions" v-model:selected="params['penalty']" label="Penalty" @vnode-updated="handleParamsChanged()" />
-    <MDBSelect v-model:options="solverOptions" v-model:selected="params['solver']" label="Solver" @vnode-updated="handleParamsChanged()" />
-    <MDBInput v-model="params['C']" label="C" @vnode-updated="handleParamsChanged()" />
-    <MDBInput v-model="params['max_iter']" label="Max iterations" @vnode-updated="handleParamsChanged()" />
+    <MDBSelect class="mt-3" v-model:options="penaltyOptions" v-model:selected="params['penalty']" label="Penalty" @vnode-updated="handleParamsChanged()" />
+    <MDBSelect class="mt-3" v-model:options="solverOptions" v-model:selected="params['solver']" label="Solver" @vnode-updated="handleParamsChanged()" />
+    <MDBInput class="mt-3" v-model="params['C']" label="C" @vnode-updated="handleParamsChanged()" />
+    <MDBInput class="mt-3" v-model="params['max_iter']" label="Max iterations" @vnode-updated="handleParamsChanged()" />
 </template>

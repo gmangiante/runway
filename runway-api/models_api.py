@@ -16,6 +16,7 @@ from flask_sse import sse
 from multiprocessing import Process
 import time
 from datetime import datetime
+from sklearn import metrics
 
 models_api = Blueprint('models_api', __name__)
 
@@ -146,7 +147,43 @@ def run_fit(model_id, name, created_by, model, X_train, y_train, X_val, y_val):
     model_data.val_score = val_score
     model_data.fit_at = datetime.now()
     model_data.fit_time_ms = round((fit_end - fit_start) * 1000)
+    model_data.other_scores = get_other_scores(model_data.class_name, model, X_val, y_val)
+    model_data.other_attribs = get_other_attribs(model_data.class_name, model)
     app_db.session.commit()
     time.sleep(3)
     sse.publish({'model_id': model_id, 'name': name, 'created_by': created_by, 'fit_at': model_data.fit_at, 'fit_time_ms': model_data.fit_time_ms,  'train_score': train_score,
-        'val_score': val_score}, type = "complete", channel = "model_fit")
+        'val_score': val_score, 'other_scores': model_data.other_scores, 'other_attribs': model_data.other_attribs}, type = "complete", channel = "model_fit")
+
+def get_other_scores(class_name, model_instance, X_val, y_val):
+    y_pred = model_instance.predict(X_val)
+    if class_name == 'LinearRegression':
+        return {
+            'mean_absolute_error': metrics.mean_absolute_error(y_val, y_pred),
+            'mean_squared_error': metrics.mean_squared_error(y_val, y_pred),
+            'root_mean_squared_error': metrics.mean_squared_error(y_val, y_pred, squared = False)
+        }
+    elif class_name == 'LogisticRegression':
+        tn, fp, fn, tp = metrics.confusion_matrix(y_val, y_pred).ravel()
+        return {
+            'true_negatives': int(tn),
+            'false_positives': int(fp),
+            'false_negatives': int(fn),
+            'true_positives': int(tp)
+        }
+    else:
+        return {}
+
+def get_other_attribs(class_name, model_instance):
+    if class_name == 'LinearRegression':
+        return {
+            'intercept': model_instance.intercept_,
+            'coefficients': list(zip(model_instance.feature_names_in_, model_instance.coef_.tolist()))
+        }
+    elif class_name == 'LogisticRegression':
+        return {
+            'class_labels': model_instance.classes_.tolist(),
+            'intercept': model_instance.intercept_.tolist(),
+            'coefficients': list(zip(model_instance.feature_names_in_, model_instance.coef_.tolist()))
+        }
+    else:
+        return {}

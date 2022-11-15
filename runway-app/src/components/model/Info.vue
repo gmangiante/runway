@@ -19,6 +19,8 @@ evtSource.addEventListener("complete", (event) => {
       props.model.fit_time_ms = event_json['fit_time_ms']
       props.model.train_score = event_json['train_score']
       props.model.val_score = event_json['val_score']
+      props.model.other_scores = event_json['other_scores']
+      props.model.other_attribs = event_json['other_attribs']
     }
 })
 
@@ -81,6 +83,14 @@ evtSource.addEventListener("complete", (event) => {
         <tr>
             <th scope="row"><strong>Val score</strong></th>
             <td>{{ model?.val_score == 0 ? 'Not trained' : model?.val_score }}</td>
+        </tr>
+        <tr>
+            <th scope="row"><strong>Other scores</strong></th>
+            <td>{{ model?.val_score == 0 ? 'Not trained' : model?.other_scores }}</td>
+        </tr>
+        <tr>
+            <th scope="row"><strong>Other attributes</strong></th>
+            <td>{{ model?.val_score == 0 ? 'Not trained' : model?.other_attribs }}</td>
         </tr>
     </MDBTable>
 </template>
