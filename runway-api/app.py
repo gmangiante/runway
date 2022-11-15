@@ -72,7 +72,7 @@ if __name__ == "__main__":
 
 @app.before_request
 def before_req_func():
-    if request.method != "OPTIONS":
+    if request.method != "OPTIONS" and not "/events" in request.base_url:
         token = request.headers.get("Authorization", None)
         user = session.get("user", None)
 
