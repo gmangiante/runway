@@ -1,7 +1,5 @@
 # runway: a data science platform
 
-Live demo available on Heroku [here](https://runway-demo-app.herokuapp.com/).
-
 **EXECUTIVE SUMMARY**
 
 **runway** is a proof-of-concept project to explore the
