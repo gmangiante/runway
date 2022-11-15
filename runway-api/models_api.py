@@ -53,15 +53,16 @@ def create_model():
     model_instance = model_class(**params)
     model.params = model_instance.get_params()
     model.saved_model = pickle.dumps(model_instance)
-    for file in datafiles:
-        assoc = ModelDatafileAssociation(role = file['role'])
-        assoc.model = model
-        df = app_db.session.get(Datafile, file['datafile_id'])
-        assoc.datafile = df
-        model.datafiles.append(assoc)
-        df.models.append(assoc)
-    app_db.session.add(model)
-    app_db.session.commit()
+    with app_db.session.no_autoflush:
+        for file in datafiles:
+            assoc = ModelDatafileAssociation(role = file['role'])
+            assoc.model = model
+            df = app_db.session.get(Datafile, file['datafile_id'])
+            assoc.datafile = df
+            model.datafiles.append(assoc)
+            df.models.append(assoc)
+        app_db.session.add(model)
+        app_db.session.commit()
     return dumps({'success': True, 'new_model_id': model.id}), 200, {'Content-Type':'application/json'}
 
 @models_api.route("/<id>", methods = ["DELETE"])
@@ -115,12 +116,12 @@ def fit_model(id):
         if train_file.content_type == "text/csv":
             df = pd.read_csv(StringIO(train_file.content.decode()))
             X_train = df[model.feature_names]
-            y_train = df[model.target_names]
+            y_train = df[model.target_name]
         val_file = app_db.session.get(Datafile, val_file_id)
         if val_file.content_type == "text/csv":
             df = pd.read_csv(StringIO(val_file.content.decode()))
             X_val = df[model.feature_names]
-            y_val = df[model.target_names]
+            y_val = df[model.target_name]
 
     model_instance = pickle.loads(model.saved_model)
 

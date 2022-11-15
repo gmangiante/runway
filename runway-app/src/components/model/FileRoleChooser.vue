@@ -14,21 +14,27 @@ defineEmits({
 
 const currentInst = getCurrentInstance()
 
-const roleOptions = ref([
-    { text: "Train + validation", value: "trainAndValidation" },
-    { text: "Train", value: "train" },
-    { text: "Validation", value: "validation" },
-    { text: "None", value: "none"}
-])
+const roleOptions = computed(() => 
+    props.dataset?.files
+    ? props.dataset.files.map(f => 
+        [
+            { text: "None", value: "none"},
+            { text: "Train + validation", value: "trainAndValidation" },
+            { text: "Train", value: "train" },
+            { text: "Validation", value: "validation" }
+        ])
+: [])
 
-const rolesSelected = computed(() => (props.dataset?.files?.some(f => f.role == "trainAndValidation"))
-    || (props.dataset?.files?.some(f => f.role == "train") && props.dataset?.files?.some(f => f.role == "validation"))
+const rolesSelected = computed(() => { console.log(props.dataset?.files); return (props.dataset?.files?.some(f => f.role == "trainAndValidation"))
+    || (props.dataset?.files?.some(f => f.role == "train") && props.dataset?.files?.some(f => f.role == "validation"))}
 )
+
 
 const doRolesChangedEmit = () => {
     const roles = props.dataset?.files?.map(f => { return { datafile_id: f.id, role: f.role }})
     currentInst?.emit('rolesChanged', { roles: roles, selected: rolesSelected.value })
 }
+
 
 onMounted(() => doRolesChangedEmit())
 
@@ -39,9 +45,9 @@ onMounted(() => doRolesChangedEmit())
             <th scope="col">File</th>
             <th scope="col">Role</th>
         </tr>
-        <tr v-for="file in dataset?.files">
+        <tr v-for="file, index in dataset?.files" :key="file.id">
             <td>{{file.name}}</td>
-            <td><MDBSelect v-model:options="roleOptions" v-model:selected="file.role" @change="doRolesChangedEmit()" /></td>
+            <td><MDBSelect v-model:options="roleOptions[index]" v-model:selected="file.role" @change="doRolesChangedEmit()" /></td>
         </tr>
     </MDBTable>
 </template>
