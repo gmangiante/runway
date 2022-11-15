@@ -75,7 +75,7 @@ def before_req_func():
     if request.method != "OPTIONS" and not "/events" in request.base_url:
         token = request.headers.get("Authorization", None)
         user = session.get("user", None)
-
+        print(f'Checked token and user, got {token} and {user}')
         if user is None and token is not None:
             token = token.split()[1]
             userinfo = urlopen(f"https://{env['AUTH0_DOMAIN']}/userinfo?access_token={token}").read()
