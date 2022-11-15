@@ -1,4 +1,6 @@
 <script setup lang="ts">
+// Dataset detail component
+// Acts as a shell to display info and tabs for explore, transform, and existing models
 import { ref } from 'vue';
 import { $ } from 'vue/macros'
 import { useAuth0 } from '@auth0/auth0-vue'

@@ -1,5 +1,6 @@
-<!-- https://www.smashingmagazine.com/2022/03/drag-drop-file-uploader-vuejs-3/ -->
 <script setup lang="ts">
+// generic file upload component, thanks to:
+// https://www.smashingmagazine.com/2022/03/drag-drop-file-uploader-vuejs-3/
 import { UploadableFile } from '@/models/UploadableFile';
 import { MDBBtn, MDBIcon } from 'mdb-vue-ui-kit'
 

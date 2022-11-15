@@ -1,4 +1,7 @@
 <script setup lang="ts">
+// App-wide navbar
+// Includes menus, logged-in info, notification bell, login button
+// Subscribes to SSE for model fit events
 import { ref, computed } from 'vue';
 import { $ } from 'vue/macros'
 import { useAuth0 } from '@auth0/auth0-vue';

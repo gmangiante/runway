@@ -1,4 +1,5 @@
 <script setup lang="ts">
+// Model actions: train (if not trained), duplicate/download (if authenticated), delete (if owner)
 import { computed } from 'vue'
 import type { PropType } from 'vue'
 import { ref } from 'vue'
@@ -6,8 +7,6 @@ import { $ } from 'vue/macros'
 import { useAuth0 } from '@auth0/auth0-vue'
 import { useFetch } from '@/composables/fetch'
 import type { Model } from '@/models/Model'
-import { ModelDatafileAssociation } from '@/models/Model'
-import type { Dataset } from '@/models/Dataset'
 import router from '@/router'
 import { MDBBtn, MDBSpinner } from 'mdb-vue-ui-kit'
 

@@ -10,6 +10,7 @@ from functools import wraps
 import json
 from jose import jwt
 
+# configure Auth0
 ENV_FILE = find_dotenv()
 if ENV_FILE:
     load_dotenv(ENV_FILE)

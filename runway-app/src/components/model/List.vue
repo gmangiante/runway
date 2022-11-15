@@ -1,4 +1,6 @@
 <script setup lang="ts">
+// Model list component
+// Retrieves public for anonymous, public + private for authenticated
 import { ref } from 'vue'
 import { $ } from 'vue/macros'
 import { useFetch } from '@/composables/fetch'

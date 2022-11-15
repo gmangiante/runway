@@ -1,3 +1,4 @@
+// Generic AJAX fetch with state reporting, adapted from:
 // https://javascript.plainenglish.io/create-a-basic-usefetch-hook-in-vue-b3ff113872d7
 // https://vuejs.org/guide/reusability/composables.html#async-state-example
 

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+// Model detail component
+// Currently acts as a shell for all model info and actions
 import { ref, unref } from 'vue'
 import { $ } from 'vue/macros'
 import { useAuth0 } from '@auth0/auth0-vue'

@@ -1,5 +1,6 @@
-<!-- https://www.smashingmagazine.com/2022/03/drag-drop-file-uploader-vuejs-3/ -->
 <script setup lang="ts">
+// generic file upload component, thanks to:
+// https://www.smashingmagazine.com/2022/03/drag-drop-file-uploader-vuejs-3/
 import { ref, onMounted, onUnmounted } from 'vue'
 const emit = defineEmits(['files-dropped'])
 

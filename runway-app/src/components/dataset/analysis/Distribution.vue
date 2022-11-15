@@ -1,4 +1,7 @@
 <script setup lang="ts">
+// This is the component to display histograms/value-counts per-file per-column
+// Can display as chart or table
+// Useful chart options thanks to:
 // https://www.educative.io/answers/chartjs---create-a-histogram
 import type { PropType } from 'vue'
 import { ref, computed } from 'vue'

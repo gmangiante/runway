@@ -1,4 +1,7 @@
 <script setup lang="ts">
+// This is the component to display datafile correlation info
+// Currently only available as a table, chart/heatmap will come later
+
 import type { PropType } from 'vue'
 import { ref, computed } from 'vue'
 import type { DatafileAnalysis } from '@/models/DatasetAnalysis'

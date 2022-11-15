@@ -1,3 +1,4 @@
+// Allows injection of Auth0 object into regular TypeScript (non-component) files, thanks to:
 // https://github.com/auth0/auth0-vue/issues/99#issuecomment-1104638005
 
 import type { Auth0VueClient } from "@auth0/auth0-vue";

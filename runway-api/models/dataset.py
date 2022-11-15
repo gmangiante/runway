@@ -4,6 +4,7 @@ from sqlalchemy.orm import relationship
 from dataclasses import dataclass
 from datetime import datetime
 
+# basic model for datasets
 @dataclass
 class Dataset(ModelBase):
     __tablename__ = "datasets"
@@ -18,6 +19,7 @@ class Dataset(ModelBase):
     files = relationship("Datafile", back_populates="dataset")
     models = relationship("Model", back_populates="dataset")
 
+    # JSON-compatible return object
     def serialize(self):
         return {
             "id": self.id,
@@ -31,6 +33,7 @@ class Dataset(ModelBase):
             "models": [model.serialize() for model in self.models]
         }
 
+# basic model for datafiles (1 dataset has many datafiles)
 class Datafile(ModelBase):
     __tablename__ = "datafiles"
 
@@ -45,6 +48,7 @@ class Datafile(ModelBase):
     updated_at = Column(DateTime(timezone = True), nullable = False, server_default = func.now(), onupdate = func.now())
     models = relationship("ModelDatafileAssociation", back_populates = "datafile")
     
+    # JSON-compatible return object
     def serialize(self):
         return {
             "id": self.id,

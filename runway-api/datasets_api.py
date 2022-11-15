@@ -14,6 +14,9 @@ datasets_api = Blueprint("datasets_api", __name__)
 
 @datasets_api.route("/", methods = ["GET"])
 def list_datasets():
+    """
+    list all datasets available to this user (or only public if anonymous)
+    """
     user = session.get("user")
     if user is None:
         return [dataset.serialize() for dataset in app_db.session.query(Dataset).filter(Dataset.is_public.is_(True)).all()], 200, {'Content-Type':'application/json'} 
@@ -22,12 +25,18 @@ def list_datasets():
 
 @datasets_api.route("/<id>", methods = ["GET"])
 def get_dataset_detail(id):
+    """
+    Get details on single dataset
+    """
     result = app_db.session.get(Dataset, id)
     return dumps(result.serialize()), 200, {'Content-Type':'application/json'} 
 
 @datasets_api.route("/", methods = ["POST"])
 @requires_auth
 def create_dataset():
+    """
+    Create a dataset from JSON request (auth required)
+    """
     ds_dict = loads(request.data)
     ds_dict.pop("id", None)
     ds = Dataset(**ds_dict)
@@ -38,6 +47,9 @@ def create_dataset():
 @datasets_api.route("/<id>", methods = ["DELETE"])
 @requires_auth
 def delete_dataset(id):
+    """
+    Delete a dataset from ID parameter (auth required)
+    """
     ds = app_db.session.get(Dataset, id)
     app_db.session.delete(ds)
     app_db.session.commit()
@@ -46,6 +58,9 @@ def delete_dataset(id):
 @datasets_api.route("sharing/<id>/<is_public>", methods = ["POST"])
 @requires_auth
 def set_sharing(id, is_public):
+    """
+    Change dataset sharing from public-private or vice-versa (auth required)
+    """
     ds = app_db.session.get(Dataset, id)
     ds.is_public = True if is_public == "true" else False
     app_db.session.commit()
@@ -53,6 +68,10 @@ def set_sharing(id, is_public):
 
 @datasets_api.route("/analyze/<id>", methods = ["GET"])
 def analyze_dataset(id):
+    """
+    Return useful information about an existing dataset, based on ID
+    Includes nulls, data types, unique value counts, distributions per-column, and correlation data
+    """
     analysis = { }
     ds = app_db.session.get(Dataset, id)
     for file in ds.files:
@@ -72,12 +91,18 @@ def analyze_dataset(id):
 @datasets_api.route("/datafiles/<datafile_id>", methods = ["GET"])
 @requires_auth
 def download_file(datafile_id):
+    """
+    Download an existing datafile by ID (auth required)
+    """
     df = app_db.session.get(Datafile, datafile_id)
     return df.content, 200, {'Content-Type': df.content_type}
 
 @datasets_api.route("/datafiles/<created_by>/<dataset_id>", methods = ["POST"])
 @requires_auth
 def upload_files(created_by, dataset_id):
+    """
+    Upload a datafile to an existing dataset (auth required)
+    """
     if 'file' not in request.files:
         return "No file element present", 400
     file = request.files['file']
@@ -91,6 +116,9 @@ def upload_files(created_by, dataset_id):
 @datasets_api.route("/datafiles/<datafile_id>", methods = ["DELETE"])
 @requires_auth
 def delete_file(datafile_id):
+    """
+    Delete a datafile from a dataset by ID (auth required)
+    """
     df = app_db.session.get(Datafile, datafile_id)
     app_db.session.delete(df)
     app_db.session.commit()
@@ -99,6 +127,10 @@ def delete_file(datafile_id):
 @datasets_api.route("/datafiles/<datafile_id>/transform/dropnulls", methods = ["POST"])
 @requires_auth
 def drop_nulls(datafile_id):
+    """
+    Transform - drop nulls from datafile by ID (auth required)
+    Expects axis (rows or columns) and list of columns to consider
+    """
     requestData = loads(request.data)
     file = app_db.session.get(Datafile, datafile_id)
     df = pd.read_csv(StringIO(file.content.decode()))
@@ -109,6 +141,10 @@ def drop_nulls(datafile_id):
 @datasets_api.route("/datafiles/<datafile_id>/transform/imputenulls", methods = ["POST"])
 @requires_auth
 def impute_nulls(datafile_id):
+    """
+    Transform - Impute nulls per-column - can impute zero, mean, mode, or median  (auth required)
+    Expects impute mode and list of columns
+    """
     requestData = loads(request.data)
     file = app_db.session.get(Datafile, datafile_id)
     df = pd.read_csv(StringIO(file.content.decode()))
@@ -133,6 +169,10 @@ def impute_nulls(datafile_id):
 @datasets_api.route("/datafiles/<datafile_id>/transform/onehotencode", methods = ["POST"])
 @requires_auth
 def one_hot_encode(datafile_id):
+    """
+    Transform - one-hot encode columns using pd.get_dummies  (auth required)
+    Expects list of columns to encode and dropFirst
+    """
     requestData = loads(request.data)
     file = app_db.session.get(Datafile, datafile_id)
     df = pd.read_csv(StringIO(file.content.decode()))
@@ -141,6 +181,10 @@ def one_hot_encode(datafile_id):
     return dumps({'success':True, 'datafile_id': return_id}), 200, {'Content-Type':'application/json'}
 
 def save_file_for_xform(datafile, dataframe, xform, duplicate):
+    """
+    Utility function used by all transforms to either duplicate or replace transformed file
+    Expects datafile (original Datafile), dataframe (transformed Dataframe), xform (name of transform), duplicate (boolean)
+    """
     new_file_content = StringIO()
     dataframe.to_csv(new_file_content, index = False)
     if (duplicate):
@@ -157,6 +201,11 @@ def save_file_for_xform(datafile, dataframe, xform, duplicate):
 @datasets_api.route("/visualizations/<dataset_id>", methods = ["POST"])
 @requires_auth
 def uploadVisualization(dataset_id):
+    """
+    TODO - future capability
+    Upload visualization of dataset to database
+    Expects request body to be base64-encoded PNG created by toDataURL()
+    """
     imageData64 = request.data[len("data:image/png;base64,"):]
     imageData = base64.decodebytes(imageData64)
     viz = DatasetVisualization(dataset_id = dataset_id, name = "test", is_public = True, content_type = "image/png",

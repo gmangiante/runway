@@ -1,4 +1,6 @@
 <script setup lang="ts">
+// Create dataset component
+// Allows input of name, sharing, notes and then multiple file upload
 import { reactive, ref } from 'vue'
 import { $ } from 'vue/macros'
 import { useAuth0 } from '@auth0/auth0-vue';

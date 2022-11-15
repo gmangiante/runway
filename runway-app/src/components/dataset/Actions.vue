@@ -1,4 +1,5 @@
 <script setup lang="ts">
+// Dataset actions component (delete if owner, create model if authenticated)
 import type { PropType } from 'vue'
 import { ref } from 'vue'
 import { $ } from 'vue/macros'

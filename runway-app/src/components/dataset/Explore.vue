@@ -1,4 +1,6 @@
 <script setup lang="ts">
+// Explore dataset component - requires datafile selection
+// Acts as a shell for the analysis subcomponents
 import type { PropType } from 'vue'
 import { ref, onMounted } from 'vue'
 import { useFetch } from '@/composables/fetch'

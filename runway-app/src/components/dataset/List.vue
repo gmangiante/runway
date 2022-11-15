@@ -1,4 +1,6 @@
 <script setup lang="ts">
+// Dataset list component
+// Retrieves public for anonymous users, public + private for authenticated
 import { ref } from 'vue'
 import { $ } from 'vue/macros'
 import { useAuth0 } from '@auth0/auth0-vue'

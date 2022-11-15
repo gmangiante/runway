@@ -1,4 +1,7 @@
 <script setup lang="ts">
+// Models subcomponent for dataset detail
+// Shows related models
+// Retrieves public for anonymous, public + private for authenticated
 import type { PropType } from 'vue'
 import { ref } from 'vue'
 import { $ } from 'vue/macros'

@@ -1,4 +1,7 @@
 <script setup lang="ts">
+// This is the component to display the datatype summary for a datafile
+// Can display as a table or bar chart
+// Some fancy grouping thanks to:
 // https://stackoverflow.com/questions/1960473/get-all-unique-values-in-a-javascript-array-remove-duplicates
 // https://stackoverflow.com/questions/44387647/group-and-count-values-in-an-array
 

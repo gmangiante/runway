@@ -1,4 +1,7 @@
 <script setup lang="ts">
+// Files subcomponent of dataset detail
+// Allows download (if authenticated), delete (if owner)
+// TODO should also be able to add new files here, not yet
 import type { PropType } from 'vue'
 import { ref } from 'vue'
 import { $ } from 'vue/macros'

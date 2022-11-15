@@ -3,6 +3,7 @@ from sqlalchemy import Column, Integer, String, DateTime, Boolean, ForeignKey, P
 from sqlalchemy.orm import relationship
 from json import dumps
 
+# Many-to-many join between Models and their Datafiles
 class ModelDatafileAssociation(ModelBase):
     __tablename__ = "model_datafile_associations",
     model_id = Column(ForeignKey("models.id"), primary_key = True)
@@ -10,7 +11,8 @@ class ModelDatafileAssociation(ModelBase):
     role = Column(String)
     model = relationship("Model", back_populates = "datafiles")
     datafile = relationship("Datafile", back_populates = "models")
-   
+
+# basic Model class
 class Model(ModelBase):
     __tablename__ = "models"
 
@@ -36,6 +38,7 @@ class Model(ModelBase):
     updated_at = Column(DateTime(timezone = True), nullable = False, server_default = func.now(), onupdate = func.now())
     datafiles = relationship("ModelDatafileAssociation", back_populates = "model")
 
+    # JSON-compatible return object
     def serialize(self):
         return {
             "id": self.id,

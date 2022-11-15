@@ -1,4 +1,6 @@
 <script setup lang="ts">
+// Info subcomponent of dataset detail
+// Just the basics
 import type { PropType } from 'vue'
 import type { Dataset } from '@/models/Dataset'
 import { MDBTable } from 'mdb-vue-ui-kit'

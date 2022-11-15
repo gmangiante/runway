@@ -1,4 +1,6 @@
 <script setup lang="ts">
+// This is the component to display unique value stats per column for a datafile
+// Can show as chart or table
 import type { PropType } from 'vue'
 import { ref, computed } from 'vue'
 import type { DatafileAnalysis } from '@/models/DatasetAnalysis'

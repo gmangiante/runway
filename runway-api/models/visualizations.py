@@ -1,6 +1,9 @@
 from app import ModelBase
 from sqlalchemy import Column, Integer, String, DateTime, Boolean, ForeignKey, LargeBinary, func
 
+# TODO - this will be a new feature in future releases - saving and featuring dataset and model visualizations
+
+# basic visualization model for datasets
 class DatasetVisualization(ModelBase):
     __tablename__ = "datasetvisualizations"
 
@@ -14,6 +17,7 @@ class DatasetVisualization(ModelBase):
     created_at = Column(DateTime(timezone = True), nullable = False, server_default = func.now())
     updated_at = Column(DateTime(timezone = True), nullable = False, server_default = func.now(), onupdate = func.now())
 
+# basic visualization model for models
 class ModelVisualization(ModelBase):
     __tablename__ = "modelvisualizations"
 

@@ -1,4 +1,7 @@
 <script setup lang="ts">
+// Impute-null transform component for a datafile
+// Can impute zero, empty string, median, mode, mean
+// NOTE that there is a tricky aspect to this as yet unresolved about how to refresh post-transform!
 import type { PropType } from 'vue'
 import { ref, computed } from 'vue'
 import { useFetch } from '@/composables/fetch'

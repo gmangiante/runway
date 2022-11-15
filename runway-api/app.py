@@ -13,16 +13,24 @@ from flask_cors import CORS
 import redis
 
 app = Flask(__name__)
+
+# configure session persistence
 app.config["SESSION_PERMANENT"] = True
 app.config["SESSION_TYPE"] = "filesystem"
-app.config["REDIS_URL"] = env.get("REDIS_URL", "redis://localhost")
-app.config['SESSION_REDIS'] = redis.from_url(env.get("REDIS_URL", "redis://localhost"))
 app.config.update(SESSION_COOKIE_SAMESITE="None", SESSION_COOKIE_SECURE=True)
+#app.config['SESSION_REDIS'] = redis.from_url(env.get("REDIS_URL", "redis://localhost"))
+
+# configure redis connection for server-sent events
+app.config["REDIS_URL"] = env.get("REDIS_URL", "redis://localhost")
+
+# configure CORS for entire app - currently permissive origins!
 CORS(app, supports_credentials = True, expose_headers=["Content-Type", "Authorization"],
     origins=['*'])
 
+# establish the session persistence
 Session(app)
 
+# configure postgres URL based on either environment variable (heroku) or .env file (local)
 DB_URI = env.get("DATABASE_URL", "")
 if DB_URI == "":
     ENV_FILE = find_dotenv()
@@ -38,6 +46,7 @@ if DB_URI == "":
 else:
     DB_URI = DB_URI.replace('postgres://', 'postgresql://')
 
+# set up the database and ORM infrastructure
 print(f"Checking/creating database {DB_URI}")
 engine = create_engine(DB_URI, echo = env.get("FLASK_DEBUG") == "1")
 if not database_exists(engine.url):
@@ -57,6 +66,7 @@ with app.app_context():
     app_db.init_app(app)
     ModelBase.metadata.create_all(engine, checkfirst = True)
 
+# register all routes
 print("Registering API routes")
 from auth_api import auth_api, get_token_auth_header
 from datasets_api import datasets_api
@@ -75,6 +85,10 @@ if __name__ == "__main__":
 
 @app.before_request
 def before_req_func():
+    """
+    this allows us to keep track of who's logged in and only show them what they're supposed to see
+    (server-side filtering)
+    """
     if request.method != "OPTIONS" and not "/events" in request.base_url:
         user = session.get("user", None)
         token = request.headers.get("Authorization", None)

@@ -1,3 +1,4 @@
+// client-side interfaces for dataset analysis results
 export interface DatasetAnalysis {
     [index:string]: DatafileAnalysis
 }

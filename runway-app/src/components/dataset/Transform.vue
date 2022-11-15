@@ -1,4 +1,7 @@
 <script setup lang="ts">
+// Transform shell component for datasets
+// Requires datafile selection
+// Hosts all transform subcomponents
 import type { PropType } from 'vue'
 import { ref, onMounted } from 'vue'
 import { useFetch } from '@/composables/fetch'

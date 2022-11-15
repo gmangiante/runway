@@ -1,4 +1,7 @@
 <script setup lang="ts">
+// One-hot-encode transform component for a datafile
+// Allows selection of dropFirst (default = True)
+// NOTE that there is a tricky aspect to this as yet unresolved about how to refresh post-transform!
 import type { PropType } from 'vue'
 import { ref, computed } from 'vue'
 import { useFetch } from '@/composables/fetch'

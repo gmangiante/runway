@@ -1,10 +1,9 @@
 <script setup lang="ts">
+// Info subcomponent of model detail
+// Currently a "kitchen-sink" approach - needs a lot of cleanup!
 import type { PropType } from 'vue'
-import { $ } from 'vue/macros'
 import type { Model } from '@/models/Model'
 import { MDBTable } from 'mdb-vue-ui-kit'
-import { useFetch } from '@/composables/fetch'
-import type { Dataset } from '@/models/Dataset'
 
 const props = defineProps({
     model: Object as PropType<Model>

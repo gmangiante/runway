@@ -1,4 +1,6 @@
 <script setup lang="ts">
+// Linear regression parameters
+// Fit intercept, normalize, positive checkboxes
 import { ref, getCurrentInstance, onMounted, type PropType } from 'vue'
 import type { ModelParams } from '@/models/Model'
 import { MDBCheckbox } from 'mdb-vue-ui-kit'

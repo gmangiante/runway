@@ -1,4 +1,6 @@
 <script setup lang="ts">
+// Create model component
+// Acts as a shell for basic model info, file roles, target/feature selection, and parameters
 import { ref, reactive, computed, onMounted, type Ref } from 'vue'
 import { $ } from 'vue/macros'
 import { useAuth0 } from '@auth0/auth0-vue';

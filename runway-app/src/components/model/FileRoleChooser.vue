@@ -1,4 +1,6 @@
 <script setup lang="ts">
+// File role chooser subcomponent for model creation
+// Allows selection of train/validation roles per datafile of dataset
 import { ref, computed, getCurrentInstance, onMounted} from 'vue'
 import type { PropType } from 'vue'
 import type { Dataset } from '@/models/Dataset'

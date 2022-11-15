@@ -1,3 +1,5 @@
+// TODO not using stores at this time
+// possible future direction
 import { ref, computed } from "vue";
 import { defineStore } from "pinia";
 

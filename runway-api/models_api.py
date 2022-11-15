@@ -22,6 +22,9 @@ models_api = Blueprint('models_api', __name__)
 
 @models_api.route("/", methods = ["GET"])
 def list_models():
+    """
+    List all models, filtering by user if available (otherwise returns only public)
+    """
     user = session.get("user")
     if user is None:
         return [model.serialize() for model in app_db.session.query(Model).filter(Model.is_public.is_(True)).all()], 200, {'Content-Type':'application/json'} 
@@ -30,13 +33,23 @@ def list_models():
 
 @models_api.route("/<id>", methods = ["GET"])
 def get_model_detail(id):
+    """
+    Get model detail by ID
+    """
     result = app_db.session.get(Model, id)
     return dumps(result.serialize()), 200, {'Content-Type':'application/json'} 
 
 @models_api.route("/", methods = ["POST"])
 @requires_auth
 def create_model():
+    """
+    Create new model from JSON spec (requires auth)
+    Also constructs a model instance to save pickled version
+    """
     model_dict = loads(request.data)
+    
+    # Get rid of the stuff we want the database to auto-fill
+    # (left over if this model is a duplicate)
     model_dict.pop("id", None)
     model_dict.pop("dataset_name", None)
     model_dict.pop("fit_at", None)
@@ -44,7 +57,14 @@ def create_model():
     model_dict.pop("updated_at", None)
     model_dict['train_score'] = 0
     model_dict['val_score'] = 0
+
+    # Capture the datafiles in their original JSON format
+    # And then get rid of them from the dict
     datafiles = model_dict.pop("datafiles", None)
+
+    # Build the Model, set the class (must be imported above)
+    # Reconstruct the params (may be JSON object or string, depending on source)
+    # Construct the model instance with the params and pickle it
     model = Model(**model_dict)
     model_class = globals()[model_dict['class_name']]
     if type(model_dict['params']) == str:
@@ -54,6 +74,9 @@ def create_model():
     model_instance = model_class(**params)
     model.params = model_instance.get_params()
     model.saved_model = pickle.dumps(model_instance)
+
+    # Save the datafile associations for this model
+    # Needs "no_autoflush" to avoid trying to commit with outstanding operations
     with app_db.session.no_autoflush:
         for file in datafiles:
             assoc = ModelDatafileAssociation(role = file['role'])
@@ -69,6 +92,9 @@ def create_model():
 @models_api.route("/<id>", methods = ["DELETE"])
 @requires_auth
 def delete_model(id):
+    """
+    Delete a model by ID (requires auth)
+    """
     model = app_db.session.get(Model, id)
     for assoc in model.datafiles:
         app_db.session.delete(assoc)
@@ -79,6 +105,9 @@ def delete_model(id):
 @models_api.route("sharing/<id>/<is_public>", methods = ["POST"])
 @requires_auth
 def set_sharing(id, is_public):
+    """
+    Set model sharing to public or private by ID (requires auth)
+    """
     model = app_db.session.get(Model, id)
     model.is_public = True if is_public == "true" else False
     app_db.session.commit()
@@ -87,14 +116,26 @@ def set_sharing(id, is_public):
 @models_api.route("/<id>/download", methods = ["GET"])
 @requires_auth
 def download_model(id):
+    """
+    Download pickled version of model (requires auth)
+    """
     model = app_db.session.get(Model, id)
     return model.saved_model, 200, {'Content-Type':'application/octet-stream'}
 
 @models_api.route("/fit/<id>", methods = ["POST"])
 @requires_auth
 def fit_model(id):
+    """
+    Fit the model!
+    Expects the associated datafiles to either be a single trainAndValidation file
+    (uses default train-test split for now)
+    or 1 train file and 1 validation file
+    Uses Process to spawn a new thread so it can return to the user immediately
+    Also publishes a "start" model fit event via SSE
+    """
     model = app_db.session.get(Model, id)
     
+    # Locate our train and validation files
     train_file_id, val_file_id = -1, -1
     for file in model.datafiles:
         if file.role == "trainAndValidation":
@@ -105,8 +146,12 @@ def fit_model(id):
         elif file.role == "validation":
             val_file_id = file.datafile_id
     if train_file_id == -1 or val_file_id == -1:
+        # this shouldn't happen!
         return dumps({'success': False}), 200, {'Content-Type':'application/json'}
     train_file = app_db.session.get(Datafile, train_file_id)
+
+    # Construct target and features
+    # train-test split if same file, otherwise use 2 separate files with overlapping columns
     if train_file_id == val_file_id:
         if train_file.content_type == "text/csv":
             df = pd.read_csv(StringIO(train_file.content.decode()))
@@ -124,6 +169,7 @@ def fit_model(id):
             X_val = df[model.feature_names]
             y_val = df[model.target_name]
 
+    # Load the saved model and get going!
     model_instance = pickle.loads(model.saved_model)
 
     sse.publish({'model_id': model.id}, type = "start", channel = "model_fit")
@@ -137,6 +183,13 @@ def fit_model(id):
     return dumps({'success': True }), 200, {'Content-Type':'application/json'}
 
 def run_fit(model_id, name, created_by, model, X_train, y_train, X_val, y_val):
+    """
+    The spawned fitting thread
+    Currently only handles sklearn models (fit/score/predict)
+    Always returns primary train and validation score, along with fit stats
+    Also retrieves other scores and post-fit attributes as appropriate per model class
+    Publishes completion to server-side event
+    """
     fit_start = time.perf_counter()
     model.fit(X_train, y_train)
     fit_end = time.perf_counter()
@@ -150,11 +203,16 @@ def run_fit(model_id, name, created_by, model, X_train, y_train, X_val, y_val):
     model_data.other_scores = get_other_scores(model_data.class_name, model, X_val, y_val)
     model_data.other_attribs = get_other_attribs(model_data.class_name, model)
     app_db.session.commit()
+    # artificial delay for demo
     time.sleep(3)
     sse.publish({'model_id': model_id, 'name': name, 'created_by': created_by, 'fit_at': model_data.fit_at, 'fit_time_ms': model_data.fit_time_ms,  'train_score': train_score,
         'val_score': val_score, 'other_scores': model_data.other_scores, 'other_attribs': model_data.other_attribs}, type = "complete", channel = "model_fit")
 
 def get_other_scores(class_name, model_instance, X_val, y_val):
+    """
+    Return post-fit scores as appropriate per model class
+    Expects model class name, actual model instance, and validation data
+    """
     y_pred = model_instance.predict(X_val)
     if class_name == 'LinearRegression':
         return {
@@ -174,6 +232,10 @@ def get_other_scores(class_name, model_instance, X_val, y_val):
         return {}
 
 def get_other_attribs(class_name, model_instance):
+    """
+    Return post-fit attributes of each model type as appropriate
+    Expects class name and actual model instance
+    """
     if class_name == 'LinearRegression':
         return {
             'intercept': model_instance.intercept_,

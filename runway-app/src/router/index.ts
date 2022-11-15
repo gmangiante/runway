@@ -1,3 +1,4 @@
+// Primary Vue router
 import { authGuard } from "@auth0/auth0-vue";
 import { createRouter, createWebHistory } from "vue-router";
 

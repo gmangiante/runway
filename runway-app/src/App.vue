@@ -1,4 +1,5 @@
 <script setup lang="ts">
+// generic app shell
 import { RouterView } from "vue-router";
 import { MDBSpinner } from "mdb-vue-ui-kit";
 import NavBar from './components/NavBar.vue'

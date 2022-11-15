@@ -1,3 +1,4 @@
+// client-side description of Datasets and Datafiles
 import type { Model } from "./Model"
 
 export interface Datafile {

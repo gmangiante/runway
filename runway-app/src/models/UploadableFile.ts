@@ -1,3 +1,5 @@
+// generic uploadable file description
+// somewhat adapted from https://www.smashingmagazine.com/2022/03/drag-drop-file-uploader-vuejs-3/
 export class UploadableFile {
     file: File
     id: string

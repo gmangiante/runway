@@ -1,3 +1,5 @@
+// Generic file upload component
+// Adapted from // https://www.smashingmagazine.com/2022/03/drag-drop-file-uploader-vuejs-3/
 import { ref, unref } from 'vue'
 import { UploadableFile } from '@/models/UploadableFile'
 import { useFetch } from './fetch'

@@ -1,4 +1,7 @@
 <script setup lang="ts">
+// Drop-null transform component for a datafile
+// Can drop by row or column
+// NOTE that there is a tricky aspect to this as yet unresolved about how to refresh post-transform!
 import type { PropType } from 'vue'
 import { ref, computed, getCurrentInstance } from 'vue'
 import { useFetch } from '@/composables/fetch'

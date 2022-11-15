@@ -1,5 +1,5 @@
 <script setup lang="ts">
-
+// Just a home page! Informational
 </script>
 
 <template>

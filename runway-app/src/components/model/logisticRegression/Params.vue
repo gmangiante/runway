@@ -1,4 +1,6 @@
 <script setup lang="ts">
+// Logistic regression parameters
+// Penalty, solver, C-value, and max iterations were selected subset for now
 import { ref, getCurrentInstance, onMounted } from 'vue'
 import type { ModelParams } from '@/models/Model'
 import { MDBSelect, MDBInput } from 'mdb-vue-ui-kit'

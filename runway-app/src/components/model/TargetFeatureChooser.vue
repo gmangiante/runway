@@ -1,4 +1,6 @@
 <script setup lang="ts">
+// Target-feature selector component of model creation
+// Only allows selection of NUMERIC columns that are in common among selected data files, thanks to:
 // https://stackoverflow.com/questions/37320296/how-to-calculate-intersection-of-multiple-arrays-in-javascript-and-what-does-e
 import { computed, ref, getCurrentInstance, onMounted } from 'vue'
 import type { PropType } from 'vue'

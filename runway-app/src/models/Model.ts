@@ -1,3 +1,4 @@
+// client-side description of Models and their attributes
 export class Model {
     id: number
     dataset_id: number
