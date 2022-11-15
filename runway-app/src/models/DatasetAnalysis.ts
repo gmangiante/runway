@@ -13,6 +13,7 @@ export interface DatafileAnalysis {
     datafile_name: string,
     columns: { [key: string]: ColumnDescription }
     nulls: { [key:string]: number}
+    unique: { column: string, unique_val_count: number}[]
     corr: { column1: string, column2: string, corr_val: number }[]
     distributions: { column: string, distribution: { value: string, occurrences: number }[] }[]
 }

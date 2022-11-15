@@ -61,6 +61,7 @@ def analyze_dataset(id):
             df = pd.read_csv(StringIO(file.content.decode()))
             file_analysis['nulls'] = df.isnull().sum().to_dict()
             file_analysis['columns'] = [{ 'name': name, 'dtype': str(dtype) } for name, dtype in df.dtypes.items()]
+            file_analysis['unique'] = [ {'column': col, 'unique_val_count': df[col].nunique() } for col in df.columns ]
             file_analysis['distributions'] = [ {'column': col, 'distribution': [ {'value': str(val), 'occurrences': occ}
                 for val, occ in df[col].value_counts().items()]} for col in df.columns ]
             corr = df.corr()
@@ -127,6 +128,16 @@ def impute_nulls(datafile_id):
             median = df[col].median()
             df.loc[df[col].isnull(), col] = median
     return_id = save_file_for_xform(file, df, 'imputenulls', requestData['duplicate'])
+    return dumps({'success':True, 'datafile_id': return_id}), 200, {'Content-Type':'application/json'}
+
+@datasets_api.route("/datafiles/<datafile_id>/transform/onehotencode", methods = ["POST"])
+@requires_auth
+def one_hot_encode(datafile_id):
+    requestData = loads(request.data)
+    file = app_db.session.get(Datafile, datafile_id)
+    df = pd.read_csv(StringIO(file.content.decode()))
+    df = pd.get_dummies(df, columns = requestData['columns'], drop_first=requestData['dropFirst'])
+    return_id = save_file_for_xform(file, df, 'onehotencode', requestData['duplicate'])
     return dumps({'success':True, 'datafile_id': return_id}), 200, {'Content-Type':'application/json'}
 
 def save_file_for_xform(datafile, dataframe, xform, duplicate):
