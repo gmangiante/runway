@@ -32,6 +32,8 @@ if DB_URI == "":
     DB_USER = env.get("DB_USER")
     DB_PASS = env.get("DB_PASS")
     DB_URI = f"{DB_DRIVER}://{DB_USER}:{DB_PASS}@{DB_SERVER}:{DB_PORT}/{DB_NAME}"
+else:
+    DB_URI = DB_URI.replace('postgres://', 'postgresql://')
 
 print(f"Checking/creating database {DB_URI}")
 engine = create_engine(DB_URI, echo = env.get("FLASK_DEBUG") == "1")
