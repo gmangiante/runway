@@ -14,9 +14,9 @@ from flask_cors import CORS
 app = Flask(__name__)
 app.config["SESSION_PERMANENT"] = True
 app.config["SESSION_TYPE"] = "filesystem"
-app.config["REDIS_URL"] = "redis://localhost"
+app.config["REDIS_URL"] = env.get("REDIS_URL", "redis://localhost")
 CORS(app, supports_credentials = True, expose_headers=["Content-Type", "Authorization"],
-    origins=['http://localhost:5173', 'http://localhost:5174'])
+    origins=['*'])
 
 Session(app)
 
@@ -29,7 +29,7 @@ DB_PORT = env.get("DB_PORT")
 DB_NAME = env.get("DB_NAME")
 DB_USER = env.get("DB_USER")
 DB_PASS = env.get("DB_PASS")
-DB_URI = f"{DB_DRIVER}://{DB_USER}:{DB_PASS}@{DB_SERVER}:{DB_PORT}/{DB_NAME}"
+DB_URI = env.get("DATABASE_URL", f"{DB_DRIVER}://{DB_USER}:{DB_PASS}@{DB_SERVER}:{DB_PORT}/{DB_NAME}")
 
 print(f"Checking/creating database {DB_URI}")
 engine = create_engine(DB_URI, echo = env.get("FLASK_DEBUG") == "1")
