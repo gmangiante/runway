@@ -16,6 +16,7 @@ import TargetFeatureChooser from '@/components/model/TargetFeatureChooser.vue'
 import LinearRegressionParams from '@/components/model/linearRegression/Params.vue'
 import LogisticRegressionParams from '@/components/model/logisticRegression/Params.vue'
 import RandomForestRegressorParams from '@/components/model/randomForestRegressor/Params.vue'
+import GradientBoostClassifierParams from '@/components/model/gradientBoostClassifier/Params.vue'
 
 const props = defineProps({
     dataset_id: String
@@ -31,7 +32,8 @@ const newModel = reactive(new Model(-1, -1, '', '', false, '', '', {}, '', [], n
 const modelTypeOptions = ref([
     { text: "Linear Regression", value: "LinearRegression" },
     { text: "Logistic Regression", value: "LogisticRegression" },
-    { text: "Random Forest Regressor", value: "RandomForestRegressor" }
+    { text: "Random Forest Regressor", value: "RandomForestRegressor" },
+    { text: 'GradientBoost Classifier', value: 'GradientBoostingClassifier'}
 ]);
 
 const handleRolesChanged = (args: { roles: { datafile_id: number, role: string }[], selected: boolean} ) => {
@@ -133,6 +135,7 @@ onMounted(
           <LinearRegressionParams v-if="newModel.class_name === 'LinearRegression' && readyToSubmit" @params-changed="handleParamsChanged" :existing-params="existingParams" />
           <LogisticRegressionParams v-if="newModel.class_name === 'LogisticRegression' && readyToSubmit" @params-changed="handleParamsChanged" :existing-params="existingParams" />
           <RandomForestRegressorParams v-if="newModel.class_name === 'RandomForestRegressor' && readyToSubmit" @params-changed="handleParamsChanged" :existing-params="existingParams" />
+          <GradientBoostClassifierParams v-if="newModel.class_name === 'GradientBoostingClassifier' && readyToSubmit" @params-changed="handleParamsChanged" :existing-params="existingParams" />
         </MDBAccordionItem>
       </MDBAccordion>
       <div>

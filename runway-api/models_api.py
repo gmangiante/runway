@@ -6,7 +6,7 @@ from json import loads, dumps
 from models.model import Model
 from sqlalchemy import or_
 from sklearn.linear_model import LinearRegression, LogisticRegression
-from sklearn.ensemble import RandomForestRegressor
+from sklearn.ensemble import RandomForestRegressor, GradientBoostingClassifier
 from sklearn.model_selection import train_test_split
 import pickle
 from models.model import ModelDatafileAssociation
@@ -221,7 +221,7 @@ def get_other_scores(class_name, model_instance, X_val, y_val):
             'mean_squared_error': metrics.mean_squared_error(y_val, y_pred),
             'root_mean_squared_error': metrics.mean_squared_error(y_val, y_pred, squared = False)
         }
-    elif class_name == 'LogisticRegression':
+    elif class_name in ['LogisticRegression', 'GradientBoostingClassifier']:
         tn, fp, fn, tp = metrics.confusion_matrix(y_val, y_pred).ravel()
         return {
             'true_negatives': int(tn),
@@ -247,6 +247,10 @@ def get_other_attribs(class_name, model_instance):
             'class_labels': model_instance.classes_.tolist(),
             'intercept': model_instance.intercept_.tolist(),
             'coefficients': list(zip(model_instance.feature_names_in_, model_instance.coef_.tolist()))
+        }
+    elif class_name == 'GradientBoostingClassifier':
+        return {
+            'feature_importances': model_instance.feature_importances_.tolist()
         }
     else:
         return {}
