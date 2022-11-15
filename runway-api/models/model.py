@@ -19,6 +19,7 @@ class Model(ModelBase):
     dataset = relationship("Dataset", back_populates = "models")
     name = Column(String, nullable = False)
     is_public = Column(Boolean, nullable = False)
+    notes = Column(String)
     class_name = Column(String, nullable = False)
     params = Column(JSON, nullable = False)
     target_name = Column(String, nullable = False)
@@ -41,6 +42,7 @@ class Model(ModelBase):
             "dataset_name": self.dataset.name,
             "name": self.name,
             "is_public": self.is_public,
+            "notes": self.notes,
             "datafiles": [{'datafile_id': file.datafile_id, 'role': file.role} for file in self.datafiles],
             "class_name": self.class_name,
             "params": dumps(self.params),

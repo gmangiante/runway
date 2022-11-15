@@ -48,7 +48,7 @@ const doDrop = async () => {
 
 </script>
 <template>
-    <MDBDatatable :dataset="tableData" selectable multi @selected-rows="handleColumnsSelected"/>
+    <MDBDatatable :dataset="tableData" selectable multi @selected-rows="handleColumnsSelected" :max-width="750" />
     <div class="d-flex">
         <span class="p-2">Drop</span>
         <MDBSelect v-model:options="dropOptions" v-model:selected="selectedDropOption" class="ms-3" />

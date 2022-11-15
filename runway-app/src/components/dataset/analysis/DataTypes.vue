@@ -42,7 +42,7 @@ const tableLoading = ref(false)
             <MDBChart type="bar" :data="chartData" style="max-width: 500px; max-height: 500px" />
         </template>
         <template v-else>
-            <MDBDatatable :dataset="tableData" :loading="tableLoading" max-width="500px" />
+            <MDBDatatable :dataset="tableData" :loading="tableLoading" :max-width="750" />
         </template>
         <MDBSwitch :label="viewCharts ? 'View as charts' : 'View as tables'" v-model="viewCharts"  /> 
     </div>

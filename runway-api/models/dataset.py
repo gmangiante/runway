@@ -11,6 +11,7 @@ class Dataset(ModelBase):
     id: int = Column(Integer, primary_key = True, autoincrement = "auto", nullable = False)
     name: str = Column(String, nullable = False)
     is_public: bool = Column(Boolean, nullable = False)
+    notes: str = Column(String)
     created_by: str = Column(String, nullable = False)
     created_at: datetime = Column(DateTime(timezone = True), nullable = False, server_default = func.now())
     updated_at: datetime = Column(DateTime(timezone = True), nullable = False, server_default = func.now(), onupdate = func.now())
@@ -22,6 +23,7 @@ class Dataset(ModelBase):
             "id": self.id,
             "name": self.name,
             "is_public": self.is_public,
+            "notes": self.notes,
             "created_by": self.created_by,
             "created_at": str(self.created_at),
             "updated_at": str(self.updated_at),

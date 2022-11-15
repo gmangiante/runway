@@ -32,7 +32,7 @@ const tableLoading = ref(false)
 <template>
     <div>
         <template v-if="data.length == 0">
-            <span>No nulls found</span>
+            <span class="p-2">No nulls found</span>
         </template>
         <template v-else>
             <div>
@@ -40,10 +40,10 @@ const tableLoading = ref(false)
                     <MDBChart id="nullChart" type="bar" :data="chartData" />
                 </template>
                 <template v-else>
-                    <MDBDatatable :dataset="tableData" :loading="tableLoading" max-width="500" />
+                    <MDBDatatable :dataset="tableData" :loading="tableLoading" :max-width="750" />
                 </template>
             </div>
         </template>
-        <MDBSwitch :label="viewCharts ? 'View as charts' : 'View as tables'" v-model="viewCharts" /> 
+        <MDBSwitch v-if="data.length > 0" :label="viewCharts ? 'View as charts' : 'View as tables'" v-model="viewCharts" /> 
     </div>
 </template>

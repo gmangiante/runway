@@ -10,7 +10,7 @@ import NavBar from './components/NavBar.vue'
   </header>
   <main class="m-3 pt-5">
     <Suspense>
-      <RouterView /> 
+      <RouterView :key="$route.path" /> 
       <template #fallback>
         <div class="d-flex justify-content-center mt-5">
           <MDBSpinner color="primary" />

@@ -47,7 +47,7 @@ const updateSelectedFile = (datafile_name: string, datafile_id: number) => {
                 </MDBDropdownMenu>
         </MDBDropdown>
         <span v-if="selectedFileName == ''" class="ms-4">Choose file above</span>
-        <MDBSelect v-if="selectedFileName !== ''" v-model:options="transformOptions" v-model:selected="selectedTransform" />
+        <MDBSelect v-if="selectedFileName !== ''" v-model:options="transformOptions" v-model:selected="selectedTransform" style="max-width: 400px" />
         <DropNulls v-if="selectedFileName !== '' && selectedTransform === 'dropnulls'" :dataset_id="dataset?.id" :datafile_id="selectedFileId" :analysis="analysis[selectedFileName]" />
     </div>
 </template>

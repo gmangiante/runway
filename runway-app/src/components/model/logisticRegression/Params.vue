@@ -3,9 +3,6 @@ import { ref, getCurrentInstance, onMounted } from 'vue'
 import type { ModelParams } from '@/models/Model'
 import { MDBSelect, MDBInput } from 'mdb-vue-ui-kit'
 
-const props = defineProps({
-    modelType: String
-})
 defineEmits({
     paramsChanged(args: { newParams: ModelParams }) { return true }
 })

@@ -32,6 +32,10 @@ const props = defineProps({
             <th scope="row"><strong>Sharing</strong></th>
             <td>{{ props.dataset?.is_public ? "Public" : "Private" }}</td>
         </tr>
+        <tr>
+            <th scope="row"><strong>Notes</strong></th>
+            <td>{{ props.dataset?.notes }}</td>
+        </tr>
     </MDBTable>
 
     <DatasetFiles :dataset="dataset" />

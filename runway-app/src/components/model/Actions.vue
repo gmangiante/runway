@@ -39,13 +39,14 @@ const deleteModel = async () => {
 
 const dupModel = async() => {
     if (props.model) {
-        const newModel = {...props.model }
+        /*const newModel = {...props.model }
         newModel.name += ' copy'
         const newModelFetch =
             await useFetch<{ new_model_id: number }>('http://localhost:5000/api/models/', { method: 'POST', body: JSON.stringify(newModel) })
         if (!newModelFetch.hasError.value && newModelFetch.data.value) {
-            await router.push({ name: 'modelDetail', params: { id: newModelFetch.data.value['new_model_id'] }, replace: true, force: true })
-        }
+            
+        }*/
+        await router.push({ name: 'createModel', params: { dataset_id: props.model.dataset_id }, query: { 'dup': props.model.id}, replace: true, force: true })
     }
 }
 

@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import { ref, getCurrentInstance, onMounted } from 'vue'
+import { ref, getCurrentInstance, onMounted, type PropType } from 'vue'
 import type { ModelParams } from '@/models/Model'
 import { MDBCheckbox } from 'mdb-vue-ui-kit'
 
 const props = defineProps({
-    modelType: String
+    existingParams: Object as PropType<ModelParams>
 })
+
 defineEmits({
     paramsChanged(args: { newParams: ModelParams }) { return true }
 })
@@ -22,7 +23,11 @@ const handleParamsChanged = () =>
     currentInst?.emit('paramsChanged', { newParams: params.value })
 }
 
-onMounted(() => handleParamsChanged())
+onMounted(() => {
+    if (props.existingParams) Object.assign(params.value, props.existingParams)
+    console.log(params.value)
+    handleParamsChanged()
+})
 
 </script>
 <template>
