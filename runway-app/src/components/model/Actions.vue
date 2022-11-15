@@ -45,11 +45,25 @@ const dupModel = async() => {
 
 const isTrained = computed(() => props.model && props.model.train_score != 0 && props.model.val_score != 0)
 
+const downloadModel = async () => {
+    const modelDownload = await useFetch<Blob>(`http://localhost:5000/api/models/${props.model?.id}/download`)
+
+    if (!modelDownload.hasError.value) {
+        let link = document.createElement('a')
+        link.href = window.URL.createObjectURL(modelDownload.blob.value as Blob)
+        link.download = `${props.model?.name}.pkl`
+        document.body.appendChild(link);
+        link.click()
+        document.body.removeChild(link);
+    }
+}
+
 </script>
 
 <template>
     <MDBBtn color="primary" v-if="isOwner && !isTrained" @click="fitModel()">Train</MDBBtn>
     <MDBBtn color="primary" v-if="isAuthenticated" @click="dupModel()">Duplicate</MDBBtn>
+    <MDBBtn color="primary" v-if="isAuthenticated" @click="downloadModel()">Download</MDBBtn>
     <MDBBtn color="danger" v-if="isOwner" @click="deleteModel()">Delete</MDBBtn>
     <div v-if="isFitting" class="mt-3">
         <MDBSpinner /> Fitting in progress...

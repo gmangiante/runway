@@ -82,6 +82,12 @@ def set_sharing(id, is_public):
     app_db.session.commit()
     return dumps({'success':True}), 200, {'Content-Type':'application/json'}
 
+@models_api.route("/<id>/download", methods = ["GET"])
+@requires_auth
+def download_model(id):
+    model = app_db.session.get(Model, id)
+    return model.saved_model, 200, {'Content-Type':'application/octet-stream'}
+
 @models_api.route("/fit/<id>", methods = ["POST"])
 @requires_auth
 def fit_model(id):
