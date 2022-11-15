@@ -37,6 +37,6 @@ const goToDetail = async (tableRowIndex: number) => {
       <MDBBreadcrumbItem active>Models</MDBBreadcrumbItem>
     </MDBBreadcrumb>
   </nav>
-  <MDBDatatable :dataset="tableData" :maxHeight="700" :maxWidth="800" style="cursor:pointer"
+  <MDBDatatable :dataset="tableData" :maxHeight="700" :maxWidth="1000" style="cursor:pointer"
         fixedHeader clickable @row-click="goToDetail" :loading="tableLoading" />
 </template>
