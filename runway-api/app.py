@@ -10,11 +10,13 @@ from urllib.request import urlopen
 from json import loads
 from flask_sse import sse
 from flask_cors import CORS
+import redis
 
 app = Flask(__name__)
-app.config["SESSION_PERMANENT"] = True
+app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "redis"
 app.config["REDIS_URL"] = env.get("REDIS_URL", "redis://localhost")
+app.config['SESSION_REDIS'] = redis.from_url(env.get("REDIS_URL", "redis://localhost"))
 CORS(app, supports_credentials = True, expose_headers=["Content-Type", "Authorization"],
     origins=['*'])
 
