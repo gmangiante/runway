@@ -23,7 +23,7 @@ const { user } = $(useAuth0())
 const { data } = $(await useFetch<Dataset>(`http://localhost:5000/api/datasets/${props.dataset_id}`))
 const analysisFetch = $(await useFetch<DatasetAnalysis>(`http://localhost:5000/api/datasets/analyze/${props.dataset_id}`))
 
-const newModel = reactive(new Model(-1, -1, '', '', false, '', '', {}, '', [], new Date(), 0, 0, user.email || 'error', new Date(), new Date(), []))
+const newModel = reactive(new Model(-1, -1, '', '', false, '', '', {}, '', [], new Date(), 0, 0, 0, user.email || 'error', new Date(), new Date(), []))
 
 const modelTypeOptions = ref([
     { text: "Linear Regression", value: "LinearRegression" },
@@ -52,7 +52,7 @@ const handleFeaturesSelected = (args: { selectedFeatures: string[] }) => {
 }
 const featuresSelected = computed(() => newModel.feature_names && newModel.feature_names.length > 0)
 
-const readyToSubmit = computed(() => rolesSelected.value && targetSelected.value && featuresSelected.value)
+const readyToSubmit = computed(() => isDup.value || (rolesSelected.value && targetSelected.value && featuresSelected.value))
 
 const handleParamsChanged = ( args: { newParams: ModelParams}) => {
   newModel.params = args.newParams
@@ -62,9 +62,12 @@ const activeStep = ref('info')
 
 const submitForm = async (e: Event) => {
     e.preventDefault()
-    newModel.dataset_id = Number.parseInt(props.dataset_id || '-1')
-    newModel.datafiles = data?.files?.filter(f => f.role && (f.role !== 'none')).map(f => new ModelDatafileAssociation(f.id, f.role!)) || []
-    console.log(newModel.datafiles)
+    if (!isDup.value)
+    {
+      newModel.dataset_id = Number.parseInt(props.dataset_id || '-1')
+      newModel.datafiles = data?.files?.filter(f => f.role && (f.role !== 'none')).map(f => new ModelDatafileAssociation(f.id, f.role!)) || []
+    }
+    console.log(newModel)
     const newModelFetch =
         await useFetch<{ new_model_id: number }>('http://localhost:5000/api/models/', { method: 'POST', body: JSON.stringify(newModel) })
     if (!newModelFetch.hasError.value && newModelFetch.data.value) {

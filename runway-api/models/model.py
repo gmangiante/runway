@@ -49,6 +49,7 @@ class Model(ModelBase):
             "target_name": self.target_name,
             "feature_names": self.feature_names,
             "fit_at": str(self.fit_at),
+            "fit_time_ms": str(self.fit_time_ms),
             "train_score": self.train_score,
             "val_score": self.val_score,
             "created_by": self.created_by,

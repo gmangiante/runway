@@ -136,14 +136,17 @@ def fit_model(id):
     return dumps({'success': True }), 200, {'Content-Type':'application/json'}
 
 def run_fit(model_id, name, created_by, model, X_train, y_train, X_val, y_val):
+    fit_start = time.perf_counter()
     model.fit(X_train, y_train)
+    fit_end = time.perf_counter()
     train_score = round(model.score(X_train, y_train), 4)
     val_score = round(model.score(X_val, y_val), 4)
     model_data = app_db.session.get(Model, model_id)
     model_data.train_score = train_score
     model_data.val_score = val_score
     model_data.fit_at = datetime.now()
+    model_data.fit_time_ms = round((fit_end - fit_start) * 1000)
     app_db.session.commit()
     time.sleep(3)
-    sse.publish({'model_id': model_id, 'name': name, 'created_by': created_by, 'fit_at': model_data.fit_at,  'train_score': train_score,
+    sse.publish({'model_id': model_id, 'name': name, 'created_by': created_by, 'fit_at': model_data.fit_at, 'fit_time_ms': model_data.fit_time_ms,  'train_score': train_score,
         'val_score': val_score}, type = "complete", channel = "model_fit")

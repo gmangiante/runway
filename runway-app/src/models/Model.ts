@@ -10,6 +10,7 @@ export class Model {
     target_name: string
     feature_names: string[]
     fit_at: Date
+    fit_time_ms: number
     train_score: number
     val_score: number
     created_by: string
@@ -19,7 +20,7 @@ export class Model {
 
     constructor(id: number, dataset_id: number, dataset_name: string, name: string, is_public: boolean,
         notes: string, class_name: string, params: ModelParams, target_name: string, feature_names: string[],
-        fit_at: Date, train_score: number, val_score: number,
+        fit_at: Date, fit_time_ms: number, train_score: number, val_score: number,
         created_by: string, created_at: Date, updated_at: Date, datafiles: ModelDatafileAssociation[]) {
         this.id = id
         this.dataset_id = dataset_id
@@ -32,6 +33,7 @@ export class Model {
         this.target_name = target_name
         this.feature_names = feature_names
         this.fit_at = fit_at
+        this.fit_time_ms = fit_time_ms
         this.train_score = train_score
         this.val_score = val_score
         this.created_by = created_by

@@ -16,6 +16,7 @@ evtSource.addEventListener("complete", (event) => {
     const event_json = JSON.parse(event.data)
     if (props.model && event_json['model_id'] == props.model.id) {
       props.model.fit_at = event_json['fit_at']
+      props.model.fit_time_ms = event_json['fit_time_ms']
       props.model.train_score = event_json['train_score']
       props.model.val_score = event_json['val_score']
     }
@@ -68,6 +69,10 @@ evtSource.addEventListener("complete", (event) => {
         <tr>
             <th scope="row"><strong>Fit at</strong></th>
             <td>{{ model?.fit_at && model.fit_at.toString() != 'None' ? new Date(model.fit_at).toLocaleString() : 'Not trained' }}</td>
+        </tr>
+        <tr>
+            <th scope="row"><strong>Fit time (ms)</strong></th>
+            <td>{{ model?.fit_time_ms && model.fit_at.toString() != 'None' ? model.fit_time_ms : 'Not trained' }}</td>
         </tr>
         <tr>
             <th scope="row"><strong>Train score</strong></th>
