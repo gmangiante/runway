@@ -14,9 +14,10 @@ import redis
 
 app = Flask(__name__)
 app.config["SESSION_PERMANENT"] = True
-app.config["SESSION_TYPE"] = "redis"
+app.config["SESSION_TYPE"] = "filesystem"
 app.config["REDIS_URL"] = env.get("REDIS_URL", "redis://localhost")
-app.config['SESSION_REDIS'] = redis.from_url(env.get("REDIS_URL", "redis://localhost"))
+#app.config['SESSION_REDIS'] = redis.from_url(env.get("REDIS_URL", "redis://localhost"))
+app.config.update(SESSION_COOKIE_SAMESITE="None", SESSION_COOKIE_SECURE=True)
 CORS(app, supports_credentials = True, expose_headers=["Content-Type", "Authorization"],
     origins=['*'])
 
@@ -75,7 +76,6 @@ if __name__ == "__main__":
 @app.before_request
 def before_req_func():
     if request.method != "OPTIONS" and not "/events" in request.base_url:
-        token = request.headers.get("Authorization", None)
         user = session.get("user", None)
         print(f'Checked token and user, got {token} and {user}')
         if user is None and token is not None:
@@ -84,3 +84,4 @@ def before_req_func():
             session["user"] = loads(userinfo)["email"]
         elif user is not None and token is None:
             session.pop("user", None)
+        
