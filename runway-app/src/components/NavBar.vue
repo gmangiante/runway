@@ -35,12 +35,13 @@ evtSource.addEventListener("complete", (event) => {
 
 interface Notification {
   show: boolean
+  model_id: number
   model_name: string
   train_score: number
   val_score: number
 }
 
-const toastVals = ref<Notification>({show: false, model_name: '', train_score: 0, val_score: 0})
+const toastVals = ref<Notification>({show: false, model_id: 0, model_name: '', train_score: 0, val_score: 0})
 const unreadNotifications = ref([] as Notification[])
 const unreadNotificationCount = computed(() => unreadNotifications.value.length)
 const showUnreads = ref(false)
@@ -78,7 +79,7 @@ const doShowHideUnreads = () => {
             width="350px"
             toast="primary"
             :autohide="true" stacking appendToBody :delay="2000">
-            <template #title> {{ toastVals.model_name }} </template>
+            <template #title> <RouterLink :to="'/models/' + toastVals.model_id">{{ toastVals.model_name }}</RouterLink> </template>
             <template #small> Fit complete </template>
             train: {{ toastVals.train_score}}, val: {{ toastVals.val_score }}
         </MDBToast>
@@ -89,7 +90,7 @@ const doShowHideUnreads = () => {
           width="350px"
           toast="primary"
           stacking appendToBody :autohide="false" @hide="unreadNotifications = [] as Notification[]">
-          <template #title> {{ unread.model_name }} </template>
+          <template #title> <RouterLink :to="'/models/' + unread.model_id">{{ unread.model_name }}</RouterLink> </template>
             <template #small> Fit complete </template>
             train: {{ unread.train_score}}, val: {{ unread.val_score }}
             </MDBToast>

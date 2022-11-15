@@ -15,7 +15,7 @@ defineEmits({
 const currentInst = getCurrentInstance()
 
 const params = ref({
-    loss: 'log_loss',
+    loss: 'deviance',
     learning_rate: 0.1,
     n_estimators: 100,
     min_samples_leaf: 1,
@@ -23,7 +23,6 @@ const params = ref({
 })
 
 const lossOptions = [
-    { text: 'log_loss', value: 'log_loss'},
     { text: 'deviance', value: 'deviance'},
     { text: 'exponential', value: 'exponential'}
 ]

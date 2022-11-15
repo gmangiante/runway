@@ -25,8 +25,8 @@ const format = computed(() =>
             fontWeight: 400
         };
     }) : [])
-const tableColumns = computed(() => props.analysis ? [{ label: 'Column', field: 'column'} ].concat(Object.keys(props.analysis.columns).map(c =>
-    { return { label: props.analysis!.columns[c].name, field: props.analysis!.columns[c].name, /*format*/ }})) : [])
+const tableColumns = computed(() => props.analysis ? [{ label: 'Column', field: 'column', fixed: true, width: 150} ].concat(Object.keys(props.analysis.columns).map(c =>
+    { return { label: props.analysis!.columns[c].name, field: props.analysis!.columns[c].name, fixed: false, width: 150 /*format*/ }})) : [])
 const tableRows = computed(() => props.analysis ? Object.keys(props.analysis.columns).map(col1 =>
     props.analysis!.corr.filter(c => c.column1 === props.analysis!.columns[col1].name)
     .reduce((p, c) => { return {...p, [c.column2]: c.corr_val } }, { 'column': props.analysis!.columns[col1].name })
