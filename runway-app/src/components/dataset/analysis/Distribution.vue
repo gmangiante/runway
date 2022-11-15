@@ -58,13 +58,16 @@ const chartOptions = {
 
 <template>
     <div>
-        <MDBSelect v-model:options="colOptions" v-model:selected="selectedCol" style="max-width: 400px" />
-        <template v-if="viewCharts">
+        <div class="d-flex">
+          <span class="p-1">Column</span>
+          <MDBSelect v-model:options="colOptions" v-model:selected="selectedCol" style="max-width: 400px" class="ms-2" />
+        </div>
+          <template v-if="viewCharts">
             <MDBChart id="distChart" type="bar" style="max-width: 500px; max-height: 500px" :data="chartData" :options="chartOptions" />
         </template>
         <template v-else>
             <MDBDatatable :dataset="tableData" :loading="tableLoading" :max-width="750" />
         </template>
-        <MDBSwitch v-if="!data ||data.length > 0" :label="viewCharts ? 'View as charts' : 'View as tables'" v-model="viewCharts" /> 
+        <MDBSwitch v-if="!data || data.length > 0" :label="viewCharts ? 'View as charts' : 'View as tables'" v-model="viewCharts" /> 
     </div>
 </template>

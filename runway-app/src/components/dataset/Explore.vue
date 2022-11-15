@@ -49,7 +49,7 @@ const selectedAnalysis = ref('datatypes')
                 </MDBDropdownMenu>
         </MDBDropdown>
         <span v-if="selectedFile == ''" class="ms-4">Choose file above</span>
-        <MDBSelect v-if="selectedFile !== ''" v-model:options="analysisOptions" v-model:selected="selectedAnalysis" style="max-width: 400px" />
+        <div class='d-flex mb-3' v-if="selectedFile !== ''"><span class="p-1"><strong>Analysis</strong></span><MDBSelect class="ms-2" v-if="selectedFile !== ''" v-model:options="analysisOptions" v-model:selected="selectedAnalysis" style="max-width: 400px" /></div>
         <DataTypesAnalysis v-if="selectedFile !== '' && selectedAnalysis === 'datatypes'" :analysis="analysis[selectedFile]" />
         <NullsAnalysis v-if="selectedFile !== '' && selectedAnalysis === 'nulls'" :analysis="analysis[selectedFile]" />
         <CorrelationAnalysis v-if="selectedFile !== '' && selectedAnalysis === 'correlation'" :analysis="analysis[selectedFile]" />

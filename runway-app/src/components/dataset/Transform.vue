@@ -7,6 +7,7 @@ import type { DatasetAnalysis } from '@/models/DatasetAnalysis'
 import { MDBSelect,
     MDBDropdown, MDBDropdownItem, MDBDropdownMenu, MDBDropdownToggle } from 'mdb-vue-ui-kit'
 import DropNulls from '@/components/dataset/transforms/DropNulls.vue'
+import ImputeNulls from '@/components/dataset/transforms/ImputeNulls.vue'
 
 const props = defineProps({
     dataset: Object as PropType<Dataset>
@@ -25,7 +26,8 @@ const analyze = async () => {
 }
 
 const transformOptions = [
-    { text: 'Drop nulls', value: 'dropnulls' }
+    { text: 'Drop nulls', value: 'dropnulls' },
+    { text: 'Impute nulls', value: 'imputenulls'}
 ]
 const selectedTransform = ref('dropnulls')
 
@@ -47,7 +49,8 @@ const updateSelectedFile = (datafile_name: string, datafile_id: number) => {
                 </MDBDropdownMenu>
         </MDBDropdown>
         <span v-if="selectedFileName == ''" class="ms-4">Choose file above</span>
-        <MDBSelect v-if="selectedFileName !== ''" v-model:options="transformOptions" v-model:selected="selectedTransform" style="max-width: 400px" />
+        <div class="d-flex"><span class="p-1">Transform</span><MDBSelect v-if="selectedFileName !== ''" v-model:options="transformOptions" v-model:selected="selectedTransform" style="max-width: 400px" class="ms-3" /></div>
         <DropNulls v-if="selectedFileName !== '' && selectedTransform === 'dropnulls'" :dataset_id="dataset?.id" :datafile_id="selectedFileId" :analysis="analysis[selectedFileName]" />
+        <ImputeNulls v-if="selectedFileName !== '' && selectedTransform === 'imputenulls'" :dataset_id="dataset?.id" :datafile_id="selectedFileId" :analysis="analysis[selectedFileName]" />
     </div>
 </template>

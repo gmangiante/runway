@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { PropType } from 'vue'
-import { ref, computed, getCurrentInstance } from 'vue'
+import { ref, computed } from 'vue'
 import { useFetch } from '@/composables/fetch'
 import type { DatafileAnalysis } from '@/models/DatasetAnalysis'
 import { MDBSelect, MDBDatatable, MDBSwitch, MDBBtn } from 'mdb-vue-ui-kit'
@@ -26,22 +26,25 @@ const handleColumnsSelected = (rows: any[]) => {
     selectedColumns.value = rows.map(row => row.name)
 }
 
-const dropOptions = [
-    { text: 'rows', value: 0 },
-    { text: 'columns', value: 1 }
+const imputeOptions = [
+    { text: 'zero', value: 'zero' },
+    { text: 'empty string', value: 'emptystring' },
+    { text: 'mean', value: 'mean' },
+    { text: 'mode', value: 'mode' },
+    { text: 'median', value: 'median' }
 ]
 
-const selectedDropOption = ref(0)
+const selectedImputeOption = ref('zero')
 
-const canDrop = computed(() => selectedColumns.value.length > 0)
+const canImpute = computed(() => selectedColumns.value.length > 0)
 
 const duplicate = ref(true)
 
-const doDrop = async () => {
-    const dropData = { duplicate: duplicate.value, axis: selectedDropOption.value, columns: selectedColumns.value }
-    const dropFetch = await useFetch<{success: Boolean, datafile_id: number}>
-        (`http://localhost:5000/api/datasets/datafiles/${props.datafile_id}/transform/dropnulls`, 
-        { method: 'POST', body: JSON.stringify(dropData) })
+const doImpute = async () => {
+    const imputeData = { duplicate: duplicate.value, impute: selectedImputeOption.value, columns: selectedColumns.value }
+    const imputeFetch = await useFetch<{success: Boolean, datafile_id: number}>
+        (`http://localhost:5000/api/datasets/datafiles/${props.datafile_id}/transform/imputenulls`, 
+        { method: 'POST', body: JSON.stringify(imputeData) })
 
 }
 
@@ -49,9 +52,9 @@ const doDrop = async () => {
 <template>
     <MDBDatatable :dataset="tableData" selectable multi @selected-rows="handleColumnsSelected" :max-width="750" />
     <div class="d-flex">
-        <span class="p-2">Drop</span>
-        <MDBSelect v-model:options="dropOptions" v-model:selected="selectedDropOption" class="ms-3 me-3" />
+        <span class="p-2">Impute</span>
+        <MDBSelect v-model:options="imputeOptions" v-model:selected="selectedImputeOption" class="ms-3 me-3" />
         <MDBSwitch v-model="duplicate" :label="duplicate ? 'Duplicate' : 'Replace'"/>
-        <MDBBtn color="danger" class="ms-3" :class="{ disabled: !canDrop}" @click="doDrop()">Drop</MDBBtn>
+        <MDBBtn color="danger" class="ms-3" :class="{ disabled: !canImpute}" @click="doImpute()">Impute</MDBBtn>
     </div>
 </template>

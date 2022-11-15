@@ -102,18 +102,46 @@ def drop_nulls(datafile_id):
     file = app_db.session.get(Datafile, datafile_id)
     df = pd.read_csv(StringIO(file.content.decode()))
     df = df.dropna(axis = requestData['axis'], subset = requestData['columns'])
+    return_id = save_file_for_xform(file, df, 'dropnulls', requestData['duplicate'])
+    return dumps({'success':True, 'datafile_id': return_id}), 200, {'Content-Type':'application/json'}
+
+@datasets_api.route("/datafiles/<datafile_id>/transform/imputenulls", methods = ["POST"])
+@requires_auth
+def impute_nulls(datafile_id):
+    requestData = loads(request.data)
+    file = app_db.session.get(Datafile, datafile_id)
+    df = pd.read_csv(StringIO(file.content.decode()))
+    impute_mode = requestData['impute']
+    for col in requestData['columns']:
+        if impute_mode == 'zero':
+            df.loc[df[col].isnull(), col] = 0
+        elif impute_mode == 'emptystring':
+            df.loc[df[col].isnull(), col] = ''
+        elif impute_mode == 'mean':
+            mean = df[col].mean()
+            df.loc[df[col].isnull(), col] = mean
+        elif impute_mode == "mode":
+            mode = df[col].mode()
+            df.loc[df[col].isnull(), col] = mode
+        elif impute_mode == "median":
+            median = df[col].median()
+            df.loc[df[col].isnull(), col] = median
+    return_id = save_file_for_xform(file, df, 'imputenulls', requestData['duplicate'])
+    return dumps({'success':True, 'datafile_id': return_id}), 200, {'Content-Type':'application/json'}
+
+def save_file_for_xform(datafile, dataframe, xform, duplicate):
     new_file_content = StringIO()
-    df.to_csv(new_file_content, index = False)
-    if (requestData['duplicate']):
-        new_file = Datafile(dataset_id = file.dataset_id, name = file.name + '_dropnulls', content_type = "text/csv", content = bytes(new_file_content.getvalue(), 'utf-8'), created_by = file.created_by)
+    dataframe.to_csv(new_file_content, index = False)
+    if (duplicate):
+        new_file = Datafile(dataset_id = datafile.dataset_id, name = datafile.name + f'_{xform}', content_type = "text/csv", content = bytes(new_file_content.getvalue(), 'utf-8'), created_by = datafile.created_by)
         app_db.session.add(new_file)
         app_db.session.commit()
         return_id = new_file.id
     else:
-        file.content = bytes(new_file_content.getvalue(), 'utf-8')
+        datafile.content = bytes(new_file_content.getvalue(), 'utf-8')
         app_db.session.commit()
-        return_id = datafile_id
-    return dumps({'success':True, 'datafile_id': return_id}), 200, {'Content-Type':'application/json'}
+        return_id = datafile.id
+    return return_id
 
 @datasets_api.route("/visualizations/<dataset_id>", methods = ["POST"])
 @requires_auth
