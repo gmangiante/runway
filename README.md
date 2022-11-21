@@ -40,6 +40,7 @@ learning models. Since it was originally created for the General Assembly Data S
 - The middle/application tier (**runway-api**) is a [Flask](https://flask.palletsprojects.com/en/2.2.x/) API, served by [gunicorn](https://gunicorn.org/) to allow process spawning and server-side event publishing. This is a RESTful API that primarily consumes/produces JSON.
 - The API uses [SQLAlchemy](https://www.sqlalchemy.org/) to communicate with the database, including the very handy ORM (object relational mapper).
 - The front end application (**runway-app**) was built using the [Vue.js](https://vuejs.org/) JavaScript framework, enhanced via TypeScript.
+- The responsive design elements of **runway-app** come from [MDB](https://mdbootstrap.com/).
 - User management and authentication has been entirely outsourced to [auth0](https://auth0.com/) for both password-based and social login.
 
 **FUTURE DIRECTIONS**
